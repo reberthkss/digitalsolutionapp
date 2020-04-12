@@ -22,6 +22,7 @@ import CostOfService from "./CostOfService";
 import moment from "moment";
 import {connect} from 'react-redux';
 import Box from '@material-ui/core/Box'
+import {manageDataInDb} from "../services/insertDataDb";
 
 const MenuProps = {
     PaperProps: {
@@ -32,18 +33,20 @@ const MenuProps = {
     },
 };
 
-class EntryCreditCard extends Component {
+class AddCreditForm extends Component {
 /// local STATE
     state = {
-        date: moment(),
-        selectedCustomer: '',
-        selectedService: '',
-        selectedProduct: '',
-        paymentMethod: '',
-        isProduct: false,
-        isService: false,
-        price: 0,
-        ref: '-',
+        type: this.props.data ? this.props.data.type : 'insertCredit',
+        date: this.props.data ? this.props.data.date : moment(),
+        selectedCustomer: this.props.data ? this.props.data.selectedCustomer : null,
+        selectedService: this.props.data ? this.props.data.selectedService : null,
+        selectedProduct: this.props.data ? this.props.data.selectedProduct : null,
+        paymentMethod: this.props.data ? this.props.data.paymentMethod : null,
+        isProduct: this.props.data ? this.props.data.isProduct : false,
+        isService: this.props.data ? this.props.data.isService : false,
+        price:  this.props.data ? this.props.data.price : 0,
+        status: this.props.data ? this.props.data.status : null,
+        ref: this.props.data ? this.props.data.ref : null,
     };
 
     checkServiceBox = () => {
@@ -60,14 +63,14 @@ class EntryCreditCard extends Component {
 
     onSuccess = () => {
         const newCredit = this.state;
-        this.props.onSuccess(newCredit);
+        manageDataInDb(newCredit)
         this.props.update();
     };
 
     render() {
         const {classes} = this.props
         return (
-            <ModalContainer>
+            <ModalContainer height={'80vh'}>
                 <Typography style={{padding: 5}}>Adicionar novo credito</Typography>
                 <form style={{height: '60vh'}}>
                 <Box display={'flex'} flexDirection={'column'}>
@@ -86,6 +89,7 @@ class EntryCreditCard extends Component {
                                 style={{width: 350}}
                             >
                                 {
+                                    //TODO -> TESTAR A FUNÇÃO DE EDIÇÃO  DEPOIS QUE HOUVER LISTA DE CLIENTES PRONTA VINDO DO DB
                                     this.props.listOfCustomers.map(customer => {
                                         return (
                                             <MenuItem value={customer.formalName}>{customer.name}</MenuItem>
@@ -128,7 +132,7 @@ class EntryCreditCard extends Component {
                                 labelId={'productsList'}
                                 id={'productsListSelect'}
                                 value={this.state.selectedProduct}
-                                onChange={event => this.setState(...this.state, {selectedProduct: event.target.value})}
+                                onChange={event => this.setState({...this.state, selectedProduct: event.target.value})}
                                 MenuProps={MenuProps}
                                 input={<Input/>}
                                 style={{width: 200}}>
@@ -143,8 +147,22 @@ class EntryCreditCard extends Component {
                         </FormControl>
                     </div>
                     <MethodPayment onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
-                    <CostOfService label={'Valorização'} onChange={(event) => this.setState({...this.state, price: event.target.value})} />
-                    <TextField  label={'Observação'} />
+                    <CostOfService label={'Valorização'} value={this.state.price} onChange={(event) => this.setState({...this.state, price: event.target.value})} />
+                    <FormControl>
+                        <InputLabel id={'statusPayment'}>Status pagamento</InputLabel>
+                        <Select
+                            labelId={'statusPayment'}
+                            id={'statusPaymentSelect'}
+                            value={this.state.status}
+                            onChange={event => this.setState({...this.state, status: event.target.value})}
+                            MenuProps={MenuProps}
+                            input={<Input/>}
+                            style={{width: 350}}>
+                                <MenuItem value={'payed'}>Pago</MenuItem>
+                                <MenuItem value={'unpayed'}>Inadimplente</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <TextField  label={'Observação'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
                 </Box>
                 </form>
                 <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
@@ -159,7 +177,7 @@ const mapStateToProps = state => {
         listOfProducts: state.listProducts,
         listOfServices: state.listServices
     }
-}
+};
 
-const ECC = withStyles(style)(EntryCreditCard);
+const ECC = withStyles(style)(AddCreditForm);
 export default connect(mapStateToProps)(ECC);
