@@ -18,6 +18,22 @@ export const addDebit = (payload) => {
     return {type: 'addDebit', payload: payload}
 };
 
+export const deleteValue = (payload) => {
+    return {type: 'removeValue', payload: payload}
+};
+
+export const deleteCustomer = (payload) => {
+    return {type: 'removeCustomer', payload: payload}
+};
+
+export const deleteProduct = (payload) => {
+    return {type: 'removeProduct', payload: payload}
+};
+
+export const deleteService = (payload) => {
+    return {type: 'removeService', payload: payload}
+};
+
 export const saveDataFromDb = (action) => {
     return action;
 };

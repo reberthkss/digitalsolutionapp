@@ -12,7 +12,7 @@ import Modal from '@material-ui/core/Modal'
 import ModalContainer from "../components/modalContainer";
 import AddDebitForm from "../components/AddDebitForm";
 import AddCustomerForm from "../components/addCustomerForm";
-import {addCustomer} from "../redux/actions";
+import {addCustomer, deleteCustomer} from "../redux/actions";
 import {connect} from 'react-redux'
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
@@ -21,11 +21,16 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
 import {removeDataDb} from "../services/removeDataDb";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from '@material-ui/lab/Alert';
+
+
 
 
 const columnsTable = ['', 'Cliente', 'CNPJ', 'Razão Social', 'E-mail', 'Telefone', 'Endereço', 'Responsável'];
 class CustomersScreen extends Component {
     state = {
+        showSnackbar: false,
         addCustomer: false,
     };
 
@@ -57,7 +62,10 @@ class CustomersScreen extends Component {
                                                     </IconButton>
 
                                                     <IconButton onClick={() => {
-                                                        removeDataDb('remove_customer', customer.id)
+                                                        removeDataDb('remove_customer', customer.id);
+                                                        this.props.removeCustomer(customer.id);
+                                                        this.setState({...this.state, showSnackbar: true, message: 'Cliente removido com sucesso!'})
+
                                                     }}>
                                                         <CloseIcon />
                                                     </IconButton>
@@ -78,6 +86,11 @@ class CustomersScreen extends Component {
                         </Grid>
                     </Grid>
 
+                <Snackbar open={this.state.showSnackbar} autoHideDuration={2000} onClose={() => this.setState({...this.state, showSnackbar: false})}>
+                    <MuiAlert onClose={() => this.setState({...this.state, showSnackbar: false})} severity={'success'} variant={'filled'}>
+                        {this.state.message}
+                    </MuiAlert>
+                </Snackbar>
                 <ModalBody open={this.state.addCustomer} onClose={this.handleClose} >
                     <AddCustomerForm
                         data={this.state.data}
@@ -96,5 +109,13 @@ const mapStateToProps = (state) => {
     }
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        removeCustomer: (customerId) => {
+            dispatch(deleteCustomer(customerId))
+        }
+    }
+}
+
 const CS = withStyles(style)(CustomersScreen)
-export default connect(mapStateToProps)(CS)
+export default connect(mapStateToProps, mapDispatchToProps)(CS)

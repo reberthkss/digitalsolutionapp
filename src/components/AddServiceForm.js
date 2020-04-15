@@ -11,6 +11,7 @@ import {manageDataInDb} from "../services/insertDataDb";
 class AddServiceForm extends Component {
     state = {
         type: this.props.data ? this.props.data.type : 'insert_service',
+        id: this.props.data ? this.props.data.id : null,
         descricao: this.props.data ? this.props.data.descricao : null,
         valorizacao: this.props.data ? this.props.data.valorizacao : null,
     };

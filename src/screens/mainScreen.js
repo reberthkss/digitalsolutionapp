@@ -15,6 +15,9 @@ import {removeDataDb} from "../services/removeDataDb";
 import ModalBody from "../components/ModalBody";
 import AddCreditForm from "../components/AddCreditForm";
 import AddDebitForm from "../components/AddDebitForm";
+import {deleteValue} from "../redux/actions";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 
 
@@ -24,6 +27,7 @@ const columnsEntries = ['', 'Data', 'Cliente', 'Serviço/Produto', 'Forma de pag
 class MainScreen extends Component {
 
     state = {
+        showSnack: false,
         show: false,
         isCredit: false,
         data: {}
@@ -54,7 +58,11 @@ class MainScreen extends Component {
                                                 <IconButton onClick={() => this.showSelectedValue(value)}>
                                                     <EditIcon/>
                                                 </IconButton>
-                                                <IconButton onClick={() => removeDataDb('delete_value' ,value.id) }>
+                                                <IconButton onClick={() => {
+                                                    removeDataDb('remove_value' ,value.id);
+                                                    this.props.removeValue(value);
+                                                    this.setState({...this.state, showSnack: true, message: `Valor deletado!`})
+                                                } }>
                                                     <CloseIcon/>
                                                 </IconButton>
                                             </Box>
@@ -76,6 +84,10 @@ class MainScreen extends Component {
                         }) : null
                     }
                 </EntriesTable>
+
+                <Snackbar open={this.state.showSnack} autoHideDuration={2000} onClose={()=> this.setState({...this.state, showSnack: false})} >
+                    <MuiAlert severity={'success'} onClose={()=> this.setState({...this.state, showSnack: false})}> {this.state.message} </MuiAlert>
+                </Snackbar>
 
                 <ModalBody open={this.state.show} onClose={() => this.handleClose() }>
                     {
@@ -103,4 +115,12 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps)(MainScreen)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        removeValue: (value) => {
+            dispatch(deleteValue(value))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)

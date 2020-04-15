@@ -16,11 +16,16 @@ import CloseIcon from '@material-ui/icons/Close';
 import {removeDataDb} from "../services/removeDataDb";
 import IconButton from "@material-ui/core/IconButton";
 import ModalBody from "../components/ModalBody";
+import {deleteService} from "../redux/actions";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from '@material-ui/lab/Alert';
+
 
 const columnsService = ['', 'Descrição', 'Valorização'];
 
 class ServicesScreen extends Component {
     state = {
+        showSnackbar: false,
         addService: false,
     };
 
@@ -53,9 +58,10 @@ class ServicesScreen extends Component {
                                                         <EditIcon />
                                                     </IconButton>
                                                     <IconButton onClick={ () => {
-                                                        removeDataDb('remove_service')
+                                                        removeDataDb('remove_service', service.id)
+                                                        this.props.removeService(service.id);
+                                                        this.setState({...this.state, showSnackbar: true, message: 'Serviço removido com sucesso!'});
                                                     }
-
                                                     }>
                                                         <CloseIcon/>
                                                     </IconButton>
@@ -70,6 +76,13 @@ class ServicesScreen extends Component {
                         </EntriesTable>
                     </Grid>
                 </Grid>
+
+                <Snackbar open={this.state.showSnackbar} autoHideDuration={2000} onClose={() => this.setState({...this.state, showSnackbar: false})}>
+                    <MuiAlert onClose={() => this.setState({...this.state, showSnackbar: false})} variant={'filled'} severity={'success'}>
+                        {this.state.message}
+                    </MuiAlert>
+                </Snackbar>
+
 
                 <ModalBody open={this.state.addService} onClose={() => this.handleClose}>
                     <AddServiceForm
@@ -89,7 +102,13 @@ const mapStateToProps = state => {
     };
 };
 
-
+const mapDispatchToProps = dispatch => {
+    return {
+        removeService: (serviceId) => {
+            dispatch(deleteService(serviceId))
+        }
+    }
+};
 
 const SS = withStyles(style)(ServicesScreen);
-export default connect(mapStateToProps)(SS)
+export default connect(mapStateToProps, mapDispatchToProps)(SS)

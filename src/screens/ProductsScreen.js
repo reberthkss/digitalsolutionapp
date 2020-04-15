@@ -11,17 +11,21 @@ import AddProductForms from "../components/AddProductForms";
 import {connect} from 'react-redux'
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import {addProduct} from "../redux/actions";
+import {addProduct, deleteProduct} from "../redux/actions";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
 import {removeDataDb} from "../services/removeDataDb";
 import ModalBody from "../components/ModalBody";
-const columnsProducts = ['', 'Nome', 'Marca', 'Quantidade em estoque', 'Preço de custo', 'Preço de venda'];
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from '@material-ui/lab/Alert';
 
+const columnsProducts = ['', 'Nome', 'Marca', 'Quantidade em estoque', 'Preço de custo', 'Preço de venda'];
 class ProductsScreen extends Component {
     state = {
+        showSnackBar: false,
         addProduct: false,
+        message: '',
     };
 
     handleClose = () => {
@@ -54,8 +58,12 @@ class ProductsScreen extends Component {
                                                 </IconButton>
 
                                                 <IconButton onClick={() => {
-                                                    removeDataDb('remove_product', product.id);
-                                                    this.setState({addProduct: false})
+                                                    removeDataDb('remove_product', product.id)
+                                                    this.props.removeProduct(product.id)
+                                                    this.setState({...this.state,
+                                                        showSnackbar: true,
+                                                        message: 'Produto deletado com sucesso!',
+                                                        addProduct: false})
                                                 }}>
                                                     <CloseIcon />
                                                 </IconButton>
@@ -72,6 +80,12 @@ class ProductsScreen extends Component {
                         </EntriesTable>
                     </Grid>
                 </Grid>
+
+                <Snackbar open={this.state.showSnackbar} autoHideDuration={2000} onClose={() => this.setState({...this.state, showSnackbar: false})}>
+                    <MuiAlert onClose={() => this.setState({...this.state, showSnackbar: false})} severity={'success'} variant={'filled'}>
+                        {this.state.message}
+                    </MuiAlert>
+                </Snackbar>
 
                 <ModalBody open={this.state.addProduct} onClose={this.handleClose}>
                     <AddProductForms
@@ -91,7 +105,14 @@ const mapStateToProps = state => {
     }
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        removeProduct: (productId) => {
+            dispatch(deleteProduct(productId))
+        }
+    }
+}
 const PS = withStyles(style)(ProductsScreen);
 
-export default connect(mapStateToProps)(PS)
+export default connect(mapStateToProps, mapDispatchToProps)(PS)
 

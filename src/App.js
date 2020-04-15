@@ -16,29 +16,34 @@ import ProductsScreen from "./screens/ProductsScreen";
 import GetDataDbProvider from "./services/getDataDbProvider";
 import {saveDataFromDb} from "./redux/actions";
 import {connect} from "react-redux";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 class App extends Component {
     state = {
+        loading: true,
         scrollToTop: false,
         showDrawerMenu: false,
     };
 
+
+    loadData = async () => {
+        const allCreditsFromDb = await GetDataDbProvider.loadDataProvider('getCredit');
+        await this.props.saveData('saveCreditsDebits', allCreditsFromDb);
+
+        const allCustomersFromDb = await GetDataDbProvider.loadDataProvider('getCustomers');
+        await this.props.saveData('getCustomers', allCustomersFromDb);
+
+        const allServicesFromDb = await GetDataDbProvider.loadDataProvider('get_services');
+        console.log(`ALL SERVICES => ${JSON.stringify(allServicesFromDb)}`)
+        await this.props.saveData('getServices', allServicesFromDb);
+
+        const allProductsFromDb = await GetDataDbProvider.loadDataProvider('get_products');
+        await this.props.saveData('getProducts', allProductsFromDb);
+    };
     componentDidMount() {
-        GetDataDbProvider.loadDataProvider('getCredit').then(values => {
-            this.props.saveData('saveCreditsDebits', values)
-        });
-
-        GetDataDbProvider.loadDataProvider('getCustomers').then(values => {
-            this.props.saveData('getCustomers', values)
-        });
-
-        GetDataDbProvider.loadDataProvider('get_services').then(values => {
-            this.props.saveData('getServices', values);
-        })
-
-        GetDataDbProvider.loadDataProvider('get_products').then(values => {
-            this.props.saveData('getProducts', values)
+        this.loadData().then(() => {
+            this.setState({...this.state, loading: false})
         })
     };
 
@@ -51,11 +56,40 @@ class App extends Component {
         console.log(`new state = ${JSON.stringify(this.state)}`)
     };
 
+    renderLoading = () => {
+        return (
+              <Box display={'flex'} alignItems={'center'} justifyContent={'center'} style={{height: '100%'}}>
+                    <CircularProgress />
+              </Box>
+        )
+    }
+
     render() {
         window.onload = ev =>  window.innerWidth >= 769 ? this.setState({scrollToTop: this.state.scrollToTop, showDrawerMenu: true, height: '100vh'}) : this.setState({scrollToTop: this.state.scrollToTop, showDrawerMenu: true, height: 1000})
         window.onscroll = (ev => (window.scrollY >= window.innerHeight*0.7) ? this.setState({scrollToTop: true}) : this.setState({scrollToTop: false}) )
         window.onresize = ev => window.innerWidth >= 769 ? this.setState({scrollToTop: this.state.scrollToTop, showDrawerMenu: true, height: '100vh'}) : this.setState({scrollToTop: this.state.scrollToTop, showDrawerMenu: false, height: 1000})
 
+        if (this.state.loading) {
+            return (
+                <Router>
+                    <div id="wrapper" >
+                        <Box display={'flex'}>
+                            { this.state.showDrawerMenu ? <NavBarMobile height={this.state.height} setPage={this.setPage}/> : null }
+                            <div style={{width:'100%'}}>
+                                <NavBar menuIconClick = {this.showMenu} />
+                                <Switch>
+                                    <Route exact path={'/'} component={this.renderLoading} />
+                                    <Route exact path={'/customers'} component={this.renderLoading} />
+                                    <Route exact path={'/services'} component={this.renderLoading} />
+                                    <Route exact path={'/products'} component={this.renderLoading} />
+                                </Switch>
+                            </div>
+                            <ScrollToTopButton scrollToTop={this.state.scrollToTop} />
+                        </Box>
+                    </div>
+                </Router>
+            )
+        }
         return (
 
             <Router>
