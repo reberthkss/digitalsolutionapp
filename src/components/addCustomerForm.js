@@ -7,10 +7,13 @@ import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
 import CancelAndSaveButtons from "./cancelAndSaveButtons";
 import {manageDataInDb} from "../services/insertDataDb";
+import {addCustomer, updateCustomer} from "../redux/actions";
+import {connect} from "react-redux";
 
 class AddCustomerForm extends Component {
 
     state = {
+        _id: this.props.data ? this.props.data._id : null,
         type: this.props.data ? this.props.data.type : 'insertCustomer',
         name: this.props.data ? this.props.data.name : null,
         cnpj: this.props.data ? this.props.data.cnpj : null,
@@ -21,14 +24,26 @@ class AddCustomerForm extends Component {
         contactPerson: this.props.data ? this.props.data.contactPerson : null,
     };
 
-    onCancel = () =>{
+    onCancel = () => {
         this.props.onCancel()
     };
 
     onSuccess = () => {
         const newCustomer = this.state;
-        manageDataInDb(newCustomer);
-        this.props.updateState();
+        console.log(newCustomer._id)
+        manageDataInDb(newCustomer).then((res) => {
+            newCustomer._id = res;
+
+            if (this.state.type === 'insertCustomer') {
+                this.props.insertData(newCustomer);
+                this.props.onSuccess('adicionado');
+            } else {
+                this.props.updateData(newCustomer);
+                this.props.onSuccess('atualizado');
+            }
+        }).catch(err => {
+           console.log(err);
+        })
     };
 
     render() {
@@ -38,18 +53,28 @@ class AddCustomerForm extends Component {
                 <Typography>
                     Novo cliente
                 </Typography>
-                <form style={{ height:'55vh'}}>
-                    <Box display={'flex'} style={{height:'55vh'}} justifyContent={'center'} flexDirection={'column'}>
-                        <TextField label={'Cliente'} value={this.state.name} onChange={event => this.setState({...this.state, name: event.target.value})} />
-                        <TextField label={'CNPJ'} value={this.state.cnpj} onChange={event => this.setState({...this.state, cnpj: event.target.value })}/>
-                        <TextField label={'Razão Social'} value={this.state.formalName} onChange={event => this.setState({...this.state, formalName: event.target.value})}/>
-                        <TextField label={'E-mail'} value={this.state.email} onChange={event => this.setState({...this.state, email: event.target.value})}/>
-                        <TextField label={'Telefone'} value={this.state.fone} onChange={event => this.setState({...this.state, fone: event.target.value})} />
-                        <TextField label={'Endereço'} value={this.state.address} onChange={event => this.setState({...this.state, address: event.target.value})} />
-                        <TextField label={'Responsável'} value={this.state.contactPerson} onChange={event => this.setState({...this.state, contactPerson: event.target.value})} />
-                        <Box selfAlign={'flex-end'} justifyContent={'flex-end'}>
-                            <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
-                        </Box>
+                <form style={{height: '55vh'}}>
+                    <Box display={'flex'} style={{height: '55vh'}} justifyContent={'center'} flexDirection={'column'}>
+                        <TextField label={'Cliente'} value={this.state.name}
+                                   onChange={event => this.setState({...this.state, name: event.target.value})}/>
+                        <TextField label={'CNPJ'} value={this.state.cnpj}
+                                   onChange={event => this.setState({...this.state, cnpj: event.target.value})}/>
+                        <TextField label={'Razão Social'} value={this.state.formalName}
+                                   onChange={event => this.setState({...this.state, formalName: event.target.value})}/>
+                        <TextField label={'E-mail'} value={this.state.email}
+                                   onChange={event => this.setState({...this.state, email: event.target.value})}/>
+                        <TextField label={'Telefone'} value={this.state.fone}
+                                   onChange={event => this.setState({...this.state, fone: event.target.value})}/>
+                        <TextField label={'Endereço'} value={this.state.address}
+                                   onChange={event => this.setState({...this.state, address: event.target.value})}/>
+                        <TextField label={'Responsável'} value={this.state.contactPerson}
+                                   onChange={event => this.setState({
+                                       ...this.state,
+                                       contactPerson: event.target.value
+                                   })}/>
+                    </Box>
+                    <Box display={'flex'} alignItems={'flex-end'} style={{height: '3vh'}} justifyContent={'flex-end'}>
+                        <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
                     </Box>
                 </form>
             </ModalContainer>
@@ -57,4 +82,16 @@ class AddCustomerForm extends Component {
     }
 }
 
-export default withStyles(style)(AddCustomerForm)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        insertData: (customer) => {
+            dispatch(addCustomer(customer))
+        },
+        updateData: (customer) => {
+            dispatch(updateCustomer(customer))
+        }
+    }
+}
+
+const ADF = withStyles(style)(AddCustomerForm)
+export default connect(null, mapDispatchToProps)(ADF)

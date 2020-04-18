@@ -20,16 +20,16 @@ class EntryValueButtons extends Component {
     render() {
         let {classes} = this.props;
         return (
-            <Box display={'flex'} flexDirection={'row'} justifyContent={'flex-end'}>
-                <Button onClick={()=>this.setState({...this.state, showNewCredit: true})} className={classes.SuccessButton}>Entry service</Button>
-                <Button onClick={()=>this.setState({...this.state, showNewDebit: true})} className={classes.CancelButton}>Entry cost of service</Button>
+            <Box display={'flex'} flexDirection={'row'} style={{marginLeft: 36, marginBottom: 20}}>
+                <Button onClick={()=>this.setState({...this.state, showNewCredit: true})} className={classes.SuccessButton}>Entrada</Button>
+                <Button onClick={()=>this.setState({...this.state, showNewDebit: true})} className={classes.CancelButton}>Saída</Button>
 
                 <ModalBody open={this.state.showNewCredit} onClose={this.handleCloseCredit}>
-                    <AddCreditForm update={() => this.setState({...this.state, showNewCredit: false})} onCancel={()=>this.setState({...this.state, showNewCredit: false})}/>
+                    <AddCreditForm onSuccess={(actionType, action) => this.props.onSuccess(actionType, action)} update={() => this.setState({...this.state, showNewCredit: false})} onCancel={()=>this.setState({...this.state, showNewCredit: false})}/>
                 </ModalBody>
 
                 <ModalBody open={this.state.showNewDebit} onClose={this.handleCloseDebit}>
-                    <AddDebitForm update={() => this.setState({...this.state, showNewDebit: false})} onCancel={()=>this.setState({...this.state, showNewDebit: false})}/>
+                    <AddDebitForm onSuccess={(action) => this.props.onSuccess('Debito', action)} update={() => this.setState({...this.state, showNewDebit: false})} onCancel={()=>this.setState({...this.state, showNewDebit: false})}/>
                 </ModalBody>
             </Box>
 

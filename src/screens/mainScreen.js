@@ -22,7 +22,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 
 
-const columnsEntries = ['', 'Data', 'Cliente', 'Serviço/Produto', 'Forma de pagamento', 'Valor', 'Pago/Inadimplente', 'Observação'];
+
+const columnsEntries = ['', 'Data', 'Valor', 'Cliente', 'Serviço/Produto', 'Forma de pagamento', 'Status', 'Observação'];
 
 class MainScreen extends Component {
 
@@ -41,13 +42,14 @@ class MainScreen extends Component {
         this.setState({...this.state, show: !this.state.show})
     };
 
+    handleSuccess = (valueType, action) => this.setState({...this.state, showSnack: true, message: `${valueType} ${action} com sucesso!`});
     render() {
         return (
             <div>
                 <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Dashboard</Typography>
                 <OverViewOfSystemCards/>
-                <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30, marginBottom: 20}}>Lançamentos</Typography>
-                <EntryValueButtons/>
+                <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30, marginBottom: 10}}>Lançamentos</Typography>
+                <EntryValueButtons onSuccess={this.handleSuccess}/>
                 <EntriesTable columns={columnsEntries}>
                     {
                         this.props.listCreditsDebits ? this.props.listCreditsDebits.map(value => {
@@ -59,15 +61,16 @@ class MainScreen extends Component {
                                                     <EditIcon/>
                                                 </IconButton>
                                                 <IconButton onClick={() => {
-                                                    removeDataDb('remove_value' ,value.id);
-                                                    this.props.removeValue(value);
+                                                    removeDataDb('remove_value' ,value._id);
+                                                    this.props.removeValue(value._id);
                                                     this.setState({...this.state, showSnack: true, message: `Valor deletado!`})
                                                 } }>
                                                     <CloseIcon/>
                                                 </IconButton>
                                             </Box>
                                         </TableCell>
-                                        <TableCell component={'th'} scope={'row'}>{moment(value.date).format('DD-MM-YYYY')}</TableCell>
+                                        <TableCell component={'th'} scope={'row'}>{moment(value.date).format('DD/MM/YYYY')}</TableCell>
+                                        <TableCell component={'th'} scope={'row'}>R$ {value.price}</TableCell>
                                         <TableCell component={'th'} scope={'row'}>{value.selectedCustomer}</TableCell>
                                         <TableCell component={'th'} scope={'row'}>{
                                             value.isService && value.isProduct ?
@@ -76,8 +79,7 @@ class MainScreen extends Component {
                                             ${value.selectedProdcut ? value.selectedProdcut : ''}`
                                         }</TableCell>
                                         <TableCell component={'th'} scope={'row'}>{value.paymentMethod}</TableCell>
-                                        <TableCell component={'th'} scope={'row'}>{value.price}</TableCell>
-                                        <TableCell component={'th'} scope={'row'}>{value.status === 'payed' ? 'Pago' : 'Inadimplente'}</TableCell>
+                                        < TableCell component={'th'} scope={'row'}>{value.status}</TableCell>
                                         <TableCell component={'th'} scope={'row'}>{value.ref}</TableCell>
                                     </TableRow>
                             )
@@ -95,9 +97,11 @@ class MainScreen extends Component {
                             <AddCreditForm
                                 data={this.state.data}
                                 update={() => this.setState({...this.state, show: false})}
+                                onSuccess={this.handleSuccess}
                                 onCancel={() => this.setState({...this.state, show: false})} /> :
                             <AddDebitForm
                                 data={this.state.data}
+                                onSuccess={this.handleSuccess}
                                 update={() => this.setState({...this.state, show: false})}
                                 onCancel={() => this.setState({...this.state, show: false})}/>
                     }
@@ -117,8 +121,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        removeValue: (value) => {
-            dispatch(deleteValue(value))
+        removeValue: (id) => {
+            dispatch(deleteValue(id))
         }
     }
 }

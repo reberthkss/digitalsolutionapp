@@ -23,6 +23,8 @@ import moment from "moment";
 import {connect} from 'react-redux';
 import Box from '@material-ui/core/Box'
 import {manageDataInDb} from "../services/insertDataDb";
+import {addValue, updateValue} from "../redux/actions";
+import {formatCurrencie} from "../utils/globalFunctions";
 
 const MenuProps = {
     PaperProps: {
@@ -36,6 +38,7 @@ const MenuProps = {
 class AddCreditForm extends Component {
 /// local STATE
     state = {
+        _id: this.props.data ? this.props.data._id : null,
         type: this.props.data ? this.props.data.type : 'insertCredit',
         date: this.props.data ? this.props.data.date : moment(),
         selectedCustomer: this.props.data ? this.props.data.selectedCustomer : null,
@@ -44,7 +47,7 @@ class AddCreditForm extends Component {
         paymentMethod: this.props.data ? this.props.data.paymentMethod : null,
         isProduct: this.props.data ? this.props.data.isProduct : false,
         isService: this.props.data ? this.props.data.isService : false,
-        price:  this.props.data ? this.props.data.price : 0,
+        price:  this.props.data ? this.props.data.price : null,
         status: this.props.data ? this.props.data.status : null,
         ref: this.props.data ? this.props.data.ref : null,
     };
@@ -63,18 +66,28 @@ class AddCreditForm extends Component {
 
     onSuccess = () => {
         const newCredit = this.state;
-        manageDataInDb(newCredit)
+        manageDataInDb(newCredit).then(res => {
+            newCredit._id = res;
+            if (this.state.type === 'insertCredit') {
+                this.props.insertData(newCredit);
+                this.props.onSuccess('credito', 'adicionado');
+            } else {
+                this.props.updateData(newCredit);
+                this.props.onSuccess('credito', 'atualizado');
+            }
+        })
         this.props.update();
+
     };
 
     render() {
         const {classes} = this.props
         return (
             <ModalContainer height={'80vh'}>
-                <Typography style={{padding: 5}}>Adicionar novo credito</Typography>
+                <Typography style={{padding: 5}}>Adicionar Novo Crédito</Typography>
                 <form style={{height: '60vh'}}>
-                <Box display={'flex'} flexDirection={'column'}>
-                    <DateFieldComponent date={this.state.date} label={'Date of Credit'}/>
+                <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 10}}>
+                    <DateFieldComponent date={this.state.date} label={'Data do crédito'}/>
                     <div style={{marginBottom: 5}}>
                         <FormControl style={{marginTop: 10}}>
                             <InputLabel id={'cliente'}>Cliente</InputLabel>
@@ -88,6 +101,7 @@ class AddCreditForm extends Component {
                                 MenuProps={MenuProps}
                                 style={{width: 350}}
                             >
+                                <MenuItem value={null} style={{height: 30}}></MenuItem>
                                 {
                                     //TODO -> TESTAR A FUNÇÃO DE EDIÇÃO  DEPOIS QUE HOUVER LISTA DE CLIENTES PRONTA VINDO DO DB
                                     this.props.listOfCustomers.map(customer => {
@@ -103,7 +117,7 @@ class AddCreditForm extends Component {
                         <FormControlLabel style={{marginTop: 12.5}} control={<Checkbox checked={this.state.isService}/>}
                                           onClick={() => this.checkServiceBox()} label={'Serviço'}/>
                         <FormControl style={{float: 'right'}}>
-                            <InputLabel id={'serviceList'}>Lista de serviços</InputLabel>
+                            <InputLabel id={'serviceList'}>Lista de Serviços</InputLabel>
                             <Select
                                 labelId={'serviceList'}
                                 id={'serviceListSelect'}
@@ -112,6 +126,7 @@ class AddCreditForm extends Component {
                                 input={<Input/>}
                                 MenuProps={MenuProps}
                                 style={{width: 200}}>
+                                <MenuItem value={null} style={{height: 30}}>    </MenuItem>
                                 {
                                     this.props.listOfServices.map(service => {
                                         return (
@@ -127,7 +142,7 @@ class AddCreditForm extends Component {
                                                                                        onChange={() => this.checkProductBox()}/>}
                                           label={'Mercadoria'}/>
                         <FormControl style={{float: 'right'}}>
-                            <InputLabel id={'productsList'}>Lista de produtos</InputLabel>
+                            <InputLabel id={'productsList'}>Lista de Produtos</InputLabel>
                             <Select
                                 labelId={'productsList'}
                                 id={'productsListSelect'}
@@ -136,6 +151,7 @@ class AddCreditForm extends Component {
                                 MenuProps={MenuProps}
                                 input={<Input/>}
                                 style={{width: 200}}>
+                                <MenuItem value={null} style={{height: 30}}></MenuItem>
                                 {
                                     this.props.listOfProducts.map(product => {
                                         return (
@@ -147,9 +163,11 @@ class AddCreditForm extends Component {
                         </FormControl>
                     </div>
                     <MethodPayment onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
-                    <CostOfService label={'Valorização'} value={this.state.price} onChange={(event) => this.setState({...this.state, price: event.target.value})} />
+                    <CostOfService label={'Valorização'} value={this.state.price} onChange={(value) => {
+                        this.setState({...this.state, price: formatCurrencie(value)});
+                    }} />
                     <FormControl>
-                        <InputLabel id={'statusPayment'}>Status pagamento</InputLabel>
+                        <InputLabel id={'statusPayment'}>Status do Pagamento</InputLabel>
                         <Select
                             labelId={'statusPayment'}
                             id={'statusPaymentSelect'}
@@ -158,14 +176,18 @@ class AddCreditForm extends Component {
                             MenuProps={MenuProps}
                             input={<Input/>}
                             style={{width: 350}}>
-                                <MenuItem value={'payed'}>Pago</MenuItem>
+                                <MenuItem value={null} style={{height: 50}}> </MenuItem>
+                                <MenuItem value={'opened'}>Em aberto</MenuItem>
+                                 <MenuItem value={'payed'}>Pago</MenuItem>
                                 <MenuItem value={'unpayed'}>Inadimplente</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField  label={'Observação'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
                 </Box>
                 </form>
-                <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
+                <Box display={'flex'} style={{height: '10vh'}} alignItems={'flex-end'} justifyContent={'flex-end'}>
+                    <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
+                </Box>
             </ModalContainer>
         )
     }
@@ -179,5 +201,16 @@ const mapStateToProps = state => {
     }
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        insertData: (credit) => {
+            dispatch(addValue(credit));
+        },
+        updateData: (credit) => {
+            dispatch(updateValue(credit))
+        }
+    }
+};
+
 const ECC = withStyles(style)(AddCreditForm);
-export default connect(mapStateToProps)(ECC);
+export default connect(mapStateToProps, mapDispatchToProps)(ECC);

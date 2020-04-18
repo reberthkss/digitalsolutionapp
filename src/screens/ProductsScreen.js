@@ -39,12 +39,12 @@ class ProductsScreen extends Component {
                 <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Produtos</Typography>
                 <Grid container>
                     <Grid item xs={12}>
-                        <Box display={'flex'}  style={{padding:10}}justifyContent='flex-end' flexDirection={'row'}>
+                        <Box display={'flex'}  style={{padding:10, marginLeft: 36}}  flexDirection={'row'}>
                             <Button className={classes.SuccessButton} onClick={()=>this.setState({addProduct: true})}>Cadastrar produto</Button>
                         </Box>
                     </Grid>
                     <Grid item xs={12}>
-                        <EntriesTable columns={columnsProducts}>
+                        <EntriesTable maxHeight={500} columns={columnsProducts}>
                             {this.props.listOfProducts ? this.props.listOfProducts.map(product => {
                                 return (
                                     <TableRow key={product.nome}>
@@ -58,8 +58,8 @@ class ProductsScreen extends Component {
                                                 </IconButton>
 
                                                 <IconButton onClick={() => {
-                                                    removeDataDb('remove_product', product.id)
-                                                    this.props.removeProduct(product.id)
+                                                    removeDataDb('remove_product', product._id);
+                                                    this.props.removeProduct(product._id);
                                                     this.setState({...this.state,
                                                         showSnackbar: true,
                                                         message: 'Produto deletado com sucesso!',
@@ -72,8 +72,8 @@ class ProductsScreen extends Component {
                                         <TableCell component={'th'} scope={'row'}>{product.name}</TableCell>
                                         <TableCell component={'th'} scope={'row'}>{product.brand}</TableCell>
                                         <TableCell component={'th'} scope={'row'}>{product.amount}</TableCell>
-                                        <TableCell component={'th'} scope={'row'}>{product.priceCost}</TableCell>
-                                        <TableCell component={'th'} scope={'row'}>{product.priceSell}</TableCell>
+                                        <TableCell component={'th'} scope={'row'}>R$ {product.priceCost}</TableCell>
+                                        <TableCell component={'th'} scope={'row'}>R$ {product.priceSell}</TableCell>
                                     </TableRow>
                                 )
                             }) : null}
@@ -90,7 +90,7 @@ class ProductsScreen extends Component {
                 <ModalBody open={this.state.addProduct} onClose={this.handleClose}>
                     <AddProductForms
                         data={this.state.data}
-                        onSuccess={this.props.addProduct}
+                        onSuccess={(action) => this.setState({...this.state, showSnackbar: true, addProduct: false, message: `Produto ${action} com sucesso!`})}
                         updateState={() => this.setState({addProduct: false})}
                         onCancel={()=>this.setState({...this.state, addProduct: false})}/>
                 </ModalBody>

@@ -44,12 +44,12 @@ class CustomersScreen extends Component {
                 <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Clientes</Typography>
                     <Grid container>
                         <Grid item xs={12}>
-                            <Box display={'flex'}  style={{padding:10}}justifyContent='flex-end' flexDirection={'row'}>
+                            <Box display={'flex'}  style={{padding:10, marginLeft:36}}flexDirection={'row'}>
                                 <Button className={classes.SuccessButton} onClick={()=>this.setState({addCustomer: true})}>Cadastrar cliente</Button>
                             </Box>
                         </Grid>
                         <Grid item xs={12}>
-                            <EntriesTable columns={columnsTable}>
+                            <EntriesTable maxHeight={500} columns={columnsTable}>
                                 {this.props.customers ? this.props.customers.map((customer) => (
                                         <TableRow key={customer.nome}>
                                             <TableCell component={'th'} scope={'row'}>
@@ -62,8 +62,8 @@ class CustomersScreen extends Component {
                                                     </IconButton>
 
                                                     <IconButton onClick={() => {
-                                                        removeDataDb('remove_customer', customer.id);
-                                                        this.props.removeCustomer(customer.id);
+                                                        removeDataDb('remove_customer', customer._id);
+                                                        this.props.removeCustomer(customer._id);
                                                         this.setState({...this.state, showSnackbar: true, message: 'Cliente removido com sucesso!'})
 
                                                     }}>
@@ -93,8 +93,8 @@ class CustomersScreen extends Component {
                 </Snackbar>
                 <ModalBody open={this.state.addCustomer} onClose={this.handleClose} >
                     <AddCustomerForm
+                        onSuccess={(action) => this.setState({...this.state, showSnackbar: true, message: `Cliente ${action} com sucesso!`, addCustomer: false})}
                         data={this.state.data}
-                        updateState={() => {this.setState({...this.state, addCustomer: false})}}
                         onCancel={()=>this.setState({...this.state, addCustomer: false})}/>
                 </ModalBody>
             </div>

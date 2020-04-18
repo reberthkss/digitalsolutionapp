@@ -39,12 +39,12 @@ class ServicesScreen extends Component {
                 <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Serviços</Typography>
                 <Grid container>
                     <Grid item xs={12}>
-                        <Box display={'flex'}  style={{padding:10}}justifyContent='flex-end' flexDirection={'row'}>
+                        <Box display={'flex'}  style={{padding:10, marginLeft: 36}} flexDirection={'row'}>
                             <Button className={classes.SuccessButton} onClick={()=>this.setState({...this.state, addService: true})}>Cadastrar serviço</Button>
                         </Box>
                     </Grid>
                     <Grid item xs={12}>
-                        <EntriesTable columns={columnsService}>
+                        <EntriesTable maxHeight={500} columns={columnsService}>
                             {
                                this.props.listServices ? this.props.listServices.map(service => {
                                     return (
@@ -58,8 +58,8 @@ class ServicesScreen extends Component {
                                                         <EditIcon />
                                                     </IconButton>
                                                     <IconButton onClick={ () => {
-                                                        removeDataDb('remove_service', service.id)
-                                                        this.props.removeService(service.id);
+                                                        removeDataDb('remove_service', service._id)
+                                                        this.props.removeService(service._id);
                                                         this.setState({...this.state, showSnackbar: true, message: 'Serviço removido com sucesso!'});
                                                     }
                                                     }>
@@ -68,7 +68,7 @@ class ServicesScreen extends Component {
                                                 </Box>
                                             </TableCell>
                                             <TableCell component={'th'} scope={'row'}>{service.descricao}</TableCell>
-                                            <TableCell component={'th'} scope={'row'}>{service.valorizacao}</TableCell>
+                                            <TableCell component={'th'} scope={'row'}>R$ {service.valorizacao}</TableCell>
                                         </TableRow>
                                     )
                                 }) : null
@@ -84,9 +84,10 @@ class ServicesScreen extends Component {
                 </Snackbar>
 
 
-                <ModalBody open={this.state.addService} onClose={() => this.handleClose}>
+                <ModalBody open={this.state.addService} onClose={() => this.handleClose()}>
                     <AddServiceForm
                         data={this.state.data}
+                        onSuccess={(action) => this.setState({...this.state, addService: false, showSnackbar: true, message: `serviço ${action} com sucesso!`})}
                         update={() => this.setState({addService: false})}
                         onCancel={()=>this.setState({addService: false})}/>
                 </ModalBody>

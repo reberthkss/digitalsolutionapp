@@ -21,7 +21,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 
 class App extends Component {
     state = {
-        loading: true,
+        loading: false,
         scrollToTop: false,
         showDrawerMenu: false,
     };

@@ -15,14 +15,14 @@ const MenuProps = {
 
 export default class MethodPayment extends Component {
     state = {
-        payment: ''
+        payment: this.props.paymentMethod ? this.props.paymentMethod : ''
     };
 
     render() {
         return (
             <div>
                 <FormControl>
-                    <InputLabel id={'methodPayment'}>Metodo de pagamento</InputLabel>
+                    <InputLabel id={'methodPayment'}>Forma de Pagamento</InputLabel>
                     <Select
                         labelId={'methodPayment'}
                         id={'methodPaymentSelect'}
@@ -35,6 +35,7 @@ export default class MethodPayment extends Component {
                         }}
                         style={{width: 350}}
                     >
+                        <MenuItem value={null} style={{height: 20}}></MenuItem>
                         <MenuItem value={'vista'}>A Vista</MenuItem>
                         <MenuItem value={'parcelado'}>Parcelado</MenuItem>
                     </Select>

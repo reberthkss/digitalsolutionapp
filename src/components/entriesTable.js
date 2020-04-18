@@ -12,7 +12,7 @@ class EntriesTable extends Component {
 
     render() {
         return (
-            <TableContainer style={{maxHeight:250}}component={Paper}>
+            <TableContainer style={{maxHeight:this.props.maxHeight ? this.props.maxHeight : 250}}component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>

@@ -10,12 +10,8 @@ export const addService = (payload) => {
     return {type: 'addService', payload: payload}
 };
 
-export const addCredit = (payload) => {
-    return {type: 'addCredit', payload: payload}
-};
-
-export const addDebit = (payload) => {
-    return {type: 'addDebit', payload: payload}
+export const addValue = (payload) => {
+    return {type: 'addValue', payload: payload}
 };
 
 export const deleteValue = (payload) => {
@@ -34,7 +30,21 @@ export const deleteService = (payload) => {
     return {type: 'removeService', payload: payload}
 };
 
+export const updateProduct = (payload) => {
+    return {type: 'updateProduct', payload: payload}
+};
+
+export const updateValue = (payload) => {
+    return {type: 'updateValue', payload: payload}
+};
+
+export const updateCustomer = (payload) => {
+    return {type: 'updateCustomer', payload: payload}
+};
+
+export const updateService = (payload) => {
+    return {type: 'updateService', payload: payload}
+}
 export const saveDataFromDb = (action) => {
     return action;
 };
-

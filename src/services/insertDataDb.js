@@ -1,8 +1,13 @@
 import {URL_BASE} from "../consts/consts";
 
 export const manageDataInDb = async (data) => {
-    fetch(URL_BASE, {
+    console.log(`VAI EXECUTAR FETCH`)
+    console.log(data)
+   const res = await fetch(URL_BASE, {
         method: 'POST',
         body: JSON.stringify(data),
-    }).then(res => res.json()).then(resJ => console.log(resJ))
+    });
+   const resJ = await res.json();
+   console.log(resJ)
+   return resJ.id;
 };
