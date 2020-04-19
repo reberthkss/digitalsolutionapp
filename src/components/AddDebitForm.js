@@ -62,7 +62,7 @@ class AddDebitForm extends Component {
                         <DateFieldComponent label={'Date of Debit'} date={this.state.date} onChange={(dateMoment)=> this.setState({...this.state, date: dateMoment})}/>
                         <MethodPayment paymentMethod={this.state.paymentMethod} onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
                         <TextField  value={this.state.ref}label={'Referencia'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
-                        <CostOfService label={'Valorização'} price={this.state.price}onChange={(value) => this.setState({...this.state, price: formatCurrencie(value)})} />
+                        <CostOfService label={'Valorização'} value={this.state.price} onChange={(value) => this.setState({...this.state, price: formatCurrencie(value)})} />
                     </Box>
                  <Box display='flex' alignItems='flex-end'justifyContent={'flex-end'}>
                     <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>

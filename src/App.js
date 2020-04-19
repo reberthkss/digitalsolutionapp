@@ -9,7 +9,7 @@ import MainScreen from "./screens/mainScreen";
 import {BrowserRouter as Router,
     Switch,
     Route,
-    Link} from 'react-router-dom'
+} from 'react-router-dom'
 import CustomersScreen from "./screens/CustomersScreen";
 import ServicesScreen from "./screens/ServicesScreen";
 import ProductsScreen from "./screens/ProductsScreen";
@@ -17,11 +17,10 @@ import GetDataDbProvider from "./services/getDataDbProvider";
 import {saveDataFromDb} from "./redux/actions";
 import {connect} from "react-redux";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import LinearProgress from "@material-ui/core/LinearProgress";
 
 class App extends Component {
     state = {
-        loading: false,
+        loading: true,
         scrollToTop: false,
         showDrawerMenu: false,
     };
@@ -30,6 +29,12 @@ class App extends Component {
     loadData = async () => {
         const allCreditsFromDb = await GetDataDbProvider.loadDataProvider('getCredit');
         await this.props.saveData('saveCreditsDebits', allCreditsFromDb);
+
+        await this.props.saveData('saveFilteredValues', {
+            payed: allCreditsFromDb.filter( (value) => value.status === 'payed'),
+            unpayed: allCreditsFromDb.filter( (value) => value.status === 'unpayed'),
+            opened: allCreditsFromDb.filter( (value) => value.status === 'opened')
+        });
 
         const allCustomersFromDb = await GetDataDbProvider.loadDataProvider('getCustomers');
         await this.props.saveData('getCustomers', allCustomersFromDb);

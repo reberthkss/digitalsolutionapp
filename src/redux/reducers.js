@@ -1,16 +1,18 @@
-
 export const listCustomers = (state = [], action) => {
     if (action.type === 'getCustomers') {
-        return  action.payload;
-    };
+        return action.payload;
+    }
+    ;
 
     if (action.type === 'removeCustomer') {
         return state.filter(it => it._id !== action.payload);
-    };
+    }
+    ;
 
     if (action.type === 'addCustomer') {
         return [...state, action.payload];
-    };
+    }
+    ;
 
     if (action.type === 'updateCustomer') {
         const newCustomers = state.filter((customer) => customer._id !== action.payload._id);
@@ -24,15 +26,18 @@ export const listCustomers = (state = [], action) => {
 export const listProducts = (state = [], action) => {
     if (action.type === 'getProducts') {
         return action.payload
-    };
+    }
+    ;
 
     if (action.type === 'removeProduct') {
         return state.filter(it => it._id !== action.payload)
-    };
+    }
+    ;
 
     if (action.type === 'addProduct') {
         return [...state, action.payload]
-    };
+    }
+    ;
 
     if (action.type === 'updateProduct') {
         const newProducts = state.filter((product) => product._id !== action.payload._id);
@@ -43,7 +48,7 @@ export const listProducts = (state = [], action) => {
 }
 
 export const listServices = (state = [], action) => {
-    if(action.type === 'getServices') {
+    if (action.type === 'getServices') {
         return action.payload
     }
 
@@ -65,19 +70,23 @@ export const listServices = (state = [], action) => {
 
 
 export const listDebitsCredits = (state = [], action) => {
-    if(action.type === 'saveCreditsDebits') {
+    if (action.type === 'saveCreditsDebits') {
         return action.payload;
-    };
+    }
+    ;
 
     if (action.type === 'removeValue') {
         return state.filter((it) => it._id !== action.payload);
-    };
+    }
+    ;
 
     if (action.type === 'addValue') {
         return [...state, action.payload]
     }
 
     if (action.type === 'updateValue') {
+        console.log(`payload =>`);
+        console.log(action.payload)
         const newValues = state.filter((value) => value._id !== action.payload._id);
         return [...newValues, action.payload]
     }
@@ -85,5 +94,27 @@ export const listDebitsCredits = (state = [], action) => {
     return state;
 };
 
+
+export const listFilteredValues = (state = {}, action) => {
+    if (action.type === 'saveFilteredValues') {
+        console.log('entoru no redux')
+        switch (action.payload.status) {
+            case 'payed':
+                console.log('entrou n opayed')
+                state.payed.push(action.payload);
+                return {...state, payed: state.payed}
+            case 'unpayed':
+                state.unpayed.push(action.payload)
+                return {...state, unpayed: state.unpayed}
+            case 'opened':
+                state.opened.push(action.payload)
+                return {...state, opened: state.opened}
+            default :
+                return action.payload
+        }
+    }
+
+    return state
+};
 
 

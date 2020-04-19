@@ -57,8 +57,8 @@ class AddProductForms extends Component {
                             <TextField label={'Name'} value={this.state.name} onChange={event => this.setState({...this.state, name: event.target.value})}/>
                             <TextField label={'Marca'} value={this.state.brand} onChange={event => this.setState({...this.state, brand: event.target.value})}/>
                             <TextField label={'Quantidade'} value={this.state.amount} type={'number'} onChange={event => this.setState({...this.state, amount: event.target.value})}/>
-                            <CostOfService label={'Preço de custo'} price={this.state.priceCost} onChange={(value) => this.setState({...this.state, priceCost: formatCurrencie(value)})}/>
-                            <CostOfService label={'Preço de venda'} price={this.state.priceSell} onChange={(value) => this.setState({...this.state, priceSell: formatCurrencie(value)})}/>
+                            <CostOfService label={'Preço de custo'} value={this.state.priceCost} onChange={(value) => this.setState({...this.state, priceCost: formatCurrencie(value)})}/>
+                            <CostOfService label={'Preço de venda'} value={this.state.priceSell} onChange={(value) => this.setState({...this.state, priceSell: formatCurrencie(value)})}/>
                         </Box>
                     </Box>
                     <Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'}>

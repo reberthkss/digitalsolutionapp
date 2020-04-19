@@ -46,7 +46,7 @@ class AddServiceForm extends Component {
                 <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 20, paddingRight: 20}}>
                     <Box display={'flex'} flexDirection={'column'}>
                         <TextField label={'Descrição'} value={this.state.descricao} onChange={event => this.setState({...this.state, descricao: event.target.value})}/>
-                        <CostOfService label={'Valorização'} price={this.state.valorizacao} onChange={value => this.setState({...this.state, valorizacao: formatCurrencie(value)})}/>
+                        <CostOfService label={'Valorização'} value={this.state.valorizacao} onChange={value => this.setState({...this.state, valorizacao: formatCurrencie(value)})}/>
                     </Box>
                 </Box>
                 <Box display={'flex'} style={{height: '7vh'}} alignItems={'flex-end'} justifyContent={'flex-end'}>

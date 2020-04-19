@@ -5,7 +5,7 @@ import {formatCurrencie} from "../utils/globalFunctions";
 
 export default class CostOfService extends Component {
     state = {
-        value: !this.props.price ? '' : this.props.price,
+        value: !this.props.value ? '' : this.props.value,
     };
 
 

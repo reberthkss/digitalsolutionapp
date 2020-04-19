@@ -45,6 +45,13 @@ export const updateCustomer = (payload) => {
 export const updateService = (payload) => {
     return {type: 'updateService', payload: payload}
 }
+
+export const updateFilteredValues = (payload) => {
+    return {type: 'updateFilteredValues', payload: payload}
+}
+
+
+
 export const saveDataFromDb = (action) => {
     return action;
 };

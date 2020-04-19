@@ -23,7 +23,7 @@ import moment from "moment";
 import {connect} from 'react-redux';
 import Box from '@material-ui/core/Box'
 import {manageDataInDb} from "../services/insertDataDb";
-import {addValue, updateValue} from "../redux/actions";
+import {addValue, saveDataFromDb, updateValue} from "../redux/actions";
 import {formatCurrencie} from "../utils/globalFunctions";
 
 const MenuProps = {
@@ -70,6 +70,7 @@ class AddCreditForm extends Component {
             newCredit._id = res;
             if (this.state.type === 'insertCredit') {
                 this.props.insertData(newCredit);
+               this.props.saveFilteredData('saveFilteredValues', newCredit);
                 this.props.onSuccess('credito', 'adicionado');
             } else {
                 this.props.updateData(newCredit);
@@ -87,7 +88,7 @@ class AddCreditForm extends Component {
                 <Typography style={{padding: 5}}>Adicionar Novo Crédito</Typography>
                 <form style={{height: '60vh'}}>
                 <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 10}}>
-                    <DateFieldComponent date={this.state.date} label={'Data do crédito'}/>
+                    <DateFieldComponent date={this.state.date} onChange={(value) => this.setState({date: value})} label={'Data do crédito'}/>
                     <div style={{marginBottom: 5}}>
                         <FormControl style={{marginTop: 10}}>
                             <InputLabel id={'cliente'}>Cliente</InputLabel>
@@ -162,7 +163,7 @@ class AddCreditForm extends Component {
                             </Select>
                         </FormControl>
                     </div>
-                    <MethodPayment onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
+                    <MethodPayment paymentMethod={this.state.paymentMethod} onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
                     <CostOfService label={'Valorização'} value={this.state.price} onChange={(value) => {
                         this.setState({...this.state, price: formatCurrencie(value)});
                     }} />
@@ -182,7 +183,7 @@ class AddCreditForm extends Component {
                                 <MenuItem value={'unpayed'}>Inadimplente</MenuItem>
                         </Select>
                     </FormControl>
-                    <TextField  label={'Observação'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
+                    <TextField  label={'Observação'} value={this.state.ref} onChange={event => this.setState({...this.state, ref: event.target.value})} />
                 </Box>
                 </form>
                 <Box display={'flex'} style={{height: '10vh'}} alignItems={'flex-end'} justifyContent={'flex-end'}>
@@ -205,6 +206,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         insertData: (credit) => {
             dispatch(addValue(credit));
+        },
+        saveFilteredData: (type, value) => {
+            dispatch(saveDataFromDb({type: type, payload: value}))
         },
         updateData: (credit) => {
             dispatch(updateValue(credit))
