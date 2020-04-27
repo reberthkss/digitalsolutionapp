@@ -7,7 +7,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import Box  from '@material-ui/core/Box'
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import Divider from '@material-ui/core/Divider';
 
 const style = {
     root: {
@@ -37,7 +36,7 @@ class NavBar extends Component {
                              </IconButton>
                           </Box>
                           <Box m={1}>
-                              <Avatar>aa</Avatar>
+                              <Avatar>{this.props.user.substring(0,2)}</Avatar>
                           </Box>
                        </Box>
                     </Mobile>
@@ -47,10 +46,10 @@ class NavBar extends Component {
                                 <div style={{height:'80%', borderLeft: '1px solid #e3e6f0', color:'rgba(0,0,0,0)'}}> | </div>
                             </Box>
                             <Box m={1.5}>
-                                <span style={{color:'red'}}>reberth</span>
+                                <span style={{color:'red'}}>{this.props.user}</span>
                             </Box>
                             <Box m={1}>
-                                <Avatar>aa</Avatar>
+                                <Avatar>{this.props.user.substring(0,2)}</Avatar>
                             </Box>
                         </Box>
                     </Desktop>

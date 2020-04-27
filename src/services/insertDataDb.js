@@ -1,13 +1,15 @@
 import {URL_BASE} from "../consts/consts";
 
-export const manageDataInDb = async (data) => {
-    console.log(`VAI EXECUTAR FETCH`)
-    console.log(data)
-   const res = await fetch(URL_BASE, {
+export const manageDataInDb = async (screen, data, token) => {
+   const res = await fetch(URL_BASE+screen, {
         method: 'POST',
-        body: JSON.stringify(data),
+       headers: {
+           'Accept': 'application/json',
+           'Content-Type': 'application/json',
+       },
+        body: JSON.stringify({...data, token}),
     });
    const resJ = await res.json();
-   console.log(resJ)
+   console.log(resJ);
    return resJ.id;
 };

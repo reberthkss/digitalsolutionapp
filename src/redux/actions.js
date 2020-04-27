@@ -50,8 +50,22 @@ export const updateFilteredValues = (payload) => {
     return {type: 'updateFilteredValues', payload: payload}
 }
 
-
+export const removeFilteredValue = (payload) => {
+    return {type: 'removeFilteredValue', payload: payload}
+}
 
 export const saveDataFromDb = (action) => {
     return action;
+};
+
+export const finishLoadAllData = () => {
+    return {type: 'finishLoadAllData'}
+}
+
+export const markAsAuthenticated = (user, token) => {
+    return {type: 'authenticated', payload: {user, token}}
+};
+
+export const doLogout = () => {
+    return {type: 'doLogout'}
 };

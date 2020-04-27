@@ -9,6 +9,8 @@ import GroupIcon from '@material-ui/icons/Group';
 import BuildIcon from '@material-ui/icons/Build';
 import ComputerIcon from '@material-ui/icons/Computer';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import {doLogout} from "../redux/actions";
+import {connect} from "react-redux";
 
 
 
@@ -20,13 +22,12 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 class NavBarMobile extends Component {
     render() {
-        console.log(this.props.height)
         return (
             <div style={{height: this.props.height, width: '6.5rem'}}>
                 <AppBar style={{height: this.props.height}} position={'static'}>
                     <Box style={{height: this.props.height}} display={'flex'} flexDirection={'column'} justifyContent={'center'}>
                         <Box display={'flex'} flexDirection={'column'} alignItems={'center'} style={{marginBottom:50}}>
-                            <Link to={'/'} onClick={()=> this.props.setPage('mainScreen')}>
+                            <Link to={'/dashboard'} onClick={()=> this.props.setPage('mainScreen')}>
                                 <Box display={'flex'} justifyContent={'center'}>
                                     <DashboardIcon style={{color:'#fff'}}/>
                                 </Box>
@@ -58,10 +59,12 @@ class NavBarMobile extends Component {
                             </Link>
                         </Box>
                         <Box display={'flex'} flexDirection={'column'} alignItems={'center'} style={{marginBottom:50}}>
-                            <Box display={'flex'} justifyContent={'center'}>
-                                <ExitToAppIcon />
-                            </Box>
-                            <span style={{padding: 1}}>Logout</span>
+                            <Link to={'/'} onClick={() =>  {this.props.doLogout()}}>
+                                <Box display={'flex'} justifyContent={'center'}>
+                                    <ExitToAppIcon style={{color: '#fff'}}/>
+                                </Box>
+                                <span style={{padding: 1, color: '#fff'}}>Logout</span>
+                            </Link>
                         </Box>
                     </Box>
                 </AppBar>
@@ -70,4 +73,12 @@ class NavBarMobile extends Component {
     }
 }
 
-export default NavBarMobile
+const mapDispatchToProps = dispatch => {
+    return {
+        doLogout: () => {
+            dispatch(doLogout())
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(NavBarMobile)

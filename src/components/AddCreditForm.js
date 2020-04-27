@@ -1,6 +1,4 @@
 import Typography from "@material-ui/core/Typography";
-import CardContent from "@material-ui/core/CardContent";
-import Card from '@material-ui/core/Card'
 import React, {Component} from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from '@material-ui/core/InputLabel'
@@ -10,8 +8,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Input from '@material-ui/core/Input'
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import {Button} from "@material-ui/core";
 import {style} from "../styles/mainStyles";
 import {withStyles} from '@material-ui/styles'
 import CancelAndSaveButtons from "./cancelAndSaveButtons";
@@ -66,7 +62,8 @@ class AddCreditForm extends Component {
 
     onSuccess = () => {
         const newCredit = this.state;
-        manageDataInDb(newCredit).then(res => {
+        newCredit.price = parseFloat(newCredit.price);
+        manageDataInDb('values', newCredit, this.props.token).then(res => {
             newCredit._id = res;
             if (this.state.type === 'insertCredit') {
                 this.props.insertData(newCredit);
@@ -196,6 +193,7 @@ class AddCreditForm extends Component {
 
 const mapStateToProps = state => {
     return {
+        token: state.session.token,
         listOfCustomers: state.listCustomers,
         listOfProducts: state.listProducts,
         listOfServices: state.listServices

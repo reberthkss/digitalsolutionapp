@@ -5,19 +5,19 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'typeface-nunito'
+import {PersistGate} from "redux-persist/lib/integration/react";
 import {Provider} from 'react-redux'
-import * as reducers from './redux/reducers'
-import {combineReducers, createStore} from "redux";
+import configStore from './config/persist'
 
-const Reducers = combineReducers(reducers)
-const store = createStore(Reducers)
-
+const {store, persistor} = configStore();
 
 
 ReactDOM.render(
   <React.StrictMode>
       <Provider store={store}>
-          <App />
+          <PersistGate persistor={persistor}>
+              <App />
+          </PersistGate>
       </Provider>
   </React.StrictMode>,
   document.getElementById('root')

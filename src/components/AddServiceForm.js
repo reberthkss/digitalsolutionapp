@@ -13,7 +13,7 @@ import {connect} from "react-redux";
 import {formatCurrencie} from "../utils/globalFunctions";
 class AddServiceForm extends Component {
     state = {
-        _id: this.props.data ? this.props.data._id : null,
+        id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insert_service',
         descricao: this.props.data ? this.props.data.descricao : null,
         valorizacao: this.props.data ? this.props.data.valorizacao : null,
@@ -25,16 +25,17 @@ class AddServiceForm extends Component {
 
     onSuccess = () => {
         const newService = this.state
-        manageDataInDb(newService).then((res) => {
-            newService._id = res;
+        manageDataInDb('services', newService, this.props.token).then((id) => {
+            newService.id = id;
             if (this.state.type === 'insert_service') {
-                this.props.onSuccess('adiciondo');
+                this.props.onSuccess('adicionado');
                 this.props.insertData(newService);
             } else {
                 this.props.updateData(newService);
                 this.props.onSuccess('atualizado');
             }
         })
+        this.props.update();
     };
 
     render() {
@@ -57,6 +58,12 @@ class AddServiceForm extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        token: state.session.token,
+    }
+};
+
 const mapDispatchToProps = (dispatch) => {
     return {
         insertData: (service) => {
@@ -68,4 +75,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 const ASF = withStyles(style)(AddServiceForm);
-export default connect(null, mapDispatchToProps)(ASF)
+export default connect(mapStateToProps, mapDispatchToProps)(ASF)

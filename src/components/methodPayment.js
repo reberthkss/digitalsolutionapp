@@ -36,8 +36,12 @@ export default class MethodPayment extends Component {
                         style={{width: 350}}
                     >
                         <MenuItem value={null} style={{height: 20}}></MenuItem>
-                        <MenuItem value={'vista'}>A Vista</MenuItem>
-                        <MenuItem value={'parcelado'}>Parcelado</MenuItem>
+                        <MenuItem value={'boleto'}>Boleto</MenuItem>
+                        <MenuItem value={'c-credito'}>C. Crédito</MenuItem>
+                        <MenuItem value={'c-debito'}>C. Débito</MenuItem>
+                        <MenuItem value={'Cheque'}>Cheque</MenuItem>
+                        <MenuItem value={'Cheque'}>Transferência</MenuItem>
+                        <MenuItem value={'vista'}>Dinheiro</MenuItem>
                     </Select>
                 </FormControl>
             </div>

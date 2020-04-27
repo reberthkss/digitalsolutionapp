@@ -13,7 +13,7 @@ import {connect} from "react-redux";
 class AddCustomerForm extends Component {
 
     state = {
-        _id: this.props.data ? this.props.data._id : null,
+        id: this.props.data ? this.props.data._id : null,
         type: this.props.data ? this.props.data.type : 'insertCustomer',
         name: this.props.data ? this.props.data.name : null,
         cnpj: this.props.data ? this.props.data.cnpj : null,
@@ -30,9 +30,9 @@ class AddCustomerForm extends Component {
 
     onSuccess = () => {
         const newCustomer = this.state;
-        console.log(newCustomer._id)
-        manageDataInDb(newCustomer).then((res) => {
-            newCustomer._id = res;
+
+        manageDataInDb('customer', newCustomer, this.props.token).then((id) => {
+            newCustomer.id = id;
 
             if (this.state.type === 'insertCustomer') {
                 this.props.insertData(newCustomer);
@@ -82,6 +82,12 @@ class AddCustomerForm extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        token: state.session.token,
+    }
+};
+
 const mapDispatchToProps = (dispatch) => {
     return {
         insertData: (customer) => {
@@ -94,4 +100,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const ADF = withStyles(style)(AddCustomerForm)
-export default connect(null, mapDispatchToProps)(ADF)
+export default connect(mapStateToProps, mapDispatchToProps)(ADF)

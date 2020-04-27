@@ -19,9 +19,14 @@ import ModalBody from "../components/ModalBody";
 import {deleteService} from "../redux/actions";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
+import Fab from "@material-ui/core/Fab";
+import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
+import theme from "../themes/tableTheme";
+import {ThemeProvider} from "@material-ui/core";
+import {renderLoading} from "../utils/loading";
 
 
-const columnsService = ['', 'Descrição', 'Valorização'];
+const columnsService = ['Descrição', 'Valorização', 'Ações'];
 
 class ServicesScreen extends Component {
     state = {
@@ -32,51 +37,52 @@ class ServicesScreen extends Component {
     handleClose = () => {
         this.setState({addService: false})
     }
-    render() {
+
+    renderBody = () => {
         const {classes} = this.props;
         return (
             <div>
                 <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Serviços</Typography>
                 <Grid container>
                     <Grid item xs={12}>
-                        <Box display={'flex'}  style={{padding:10, marginLeft: 36}} flexDirection={'row'}>
-                            <Button className={classes.SuccessButton} onClick={()=>this.setState({...this.state, addService: true})}>Cadastrar serviço</Button>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <EntriesTable maxHeight={500} columns={columnsService}>
-                            {
-                               this.props.listServices ? this.props.listServices.map(service => {
-                                    return (
-                                        <TableRow key={service.descricao}>
-                                            <TableCell>
-                                                <Box display={'flex'} justifyContent={'space-around'}>
-                                                    <IconButton onClick={() => {
-                                                        service.type = 'update_service'
-                                                        this.setState({addService: true, data: service})
-                                                    }}>
-                                                        <EditIcon />
-                                                    </IconButton>
-                                                    <IconButton onClick={ () => {
-                                                        removeDataDb('remove_service', service._id)
-                                                        this.props.removeService(service._id);
-                                                        this.setState({...this.state, showSnackbar: true, message: 'Serviço removido com sucesso!'});
-                                                    }
-                                                    }>
-                                                        <CloseIcon/>
-                                                    </IconButton>
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell component={'th'} scope={'row'}>{service.descricao}</TableCell>
-                                            <TableCell component={'th'} scope={'row'}>R$ {service.valorizacao}</TableCell>
-                                        </TableRow>
-                                    )
-                                }) : null
-                            }
-                        </EntriesTable>
+                        <ThemeProvider theme={theme}>
+                            <EntriesTable maxHeight={565} columns={columnsService}>
+                                {
+                                    this.props.listServices ? this.props.listServices.map(service => {
+                                        return (
+                                            <TableRow key={service.descricao}>
+                                                <TableCell component={'th'} scope={'row'}>{service.descricao}</TableCell>
+                                                <TableCell component={'th'} scope={'row'}>R$ {service.valorizacao}</TableCell>
+                                                <TableCell style={{width: 170}}>
+                                                    <Box display={'flex'} justifyContent={'flex-start'}>
+                                                        <IconButton onClick={() => {
+                                                            service.type = 'update_service'
+                                                            this.setState({addService: true, data: service})
+                                                        }}>
+                                                            <EditIcon />
+                                                        </IconButton>
+                                                        <IconButton onClick={ () => {
+                                                            removeDataDb('services', 'remove_service', service._id, this.props.token)
+                                                            this.props.removeService(service.id);
+                                                            this.setState({...this.state, showSnackbar: true, message: 'Serviço removido com sucesso!'});
+                                                        }
+                                                        }>
+                                                            <CloseIcon/>
+                                                        </IconButton>
+                                                    </Box>
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    }) : null
+                                }
+                            </EntriesTable>
+                        </ThemeProvider>
                     </Grid>
                 </Grid>
 
+                <Fab className={classes.FloatEnterButton} onClick={()=>this.setState({...this.state, addService: true})}>
+                    <AddBoxRoundedIcon />
+                </Fab>
                 <Snackbar open={this.state.showSnackbar} autoHideDuration={2000} onClose={() => this.setState({...this.state, showSnackbar: false})}>
                     <MuiAlert onClose={() => this.setState({...this.state, showSnackbar: false})} variant={'filled'} severity={'success'}>
                         {this.state.message}
@@ -87,19 +93,24 @@ class ServicesScreen extends Component {
                 <ModalBody open={this.state.addService} onClose={() => this.handleClose()}>
                     <AddServiceForm
                         data={this.state.data}
-                        onSuccess={(action) => this.setState({...this.state, addService: false, showSnackbar: true, message: `serviço ${action} com sucesso!`})}
+                        onSuccess={(action) => this.setState({...this.state, showSnackbar: true, message: `serviço ${action} com sucesso!`})}
                         update={() => this.setState({addService: false})}
                         onCancel={()=>this.setState({addService: false})}/>
                 </ModalBody>
             </div>
         )
     }
+    render() {
+        return this.props.loading ? renderLoading() : this.renderBody();
+    }
 }
 
 
 const mapStateToProps = state => {
     return {
+        token: state.session.token,
         listServices: state.listServices,
+        loading: state.loadAllData,
     };
 };
 

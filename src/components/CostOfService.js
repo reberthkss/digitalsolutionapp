@@ -1,7 +1,7 @@
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import React, {Component} from "react";
-import {formatCurrencie} from "../utils/globalFunctions";
+
 
 export default class CostOfService extends Component {
     state = {

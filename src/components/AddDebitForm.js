@@ -37,7 +37,7 @@ class AddDebitForm extends Component {
 
     onSuccess = () => {
         const newDebit = this.state;
-        manageDataInDb(newDebit).then(res => {
+        manageDataInDb('values', newDebit, this.props.token).then(res => {
             newDebit._id = res;
             if (this.state.type === 'insertDebit') {
                 this.props.insertData(newDebit);
@@ -55,16 +55,16 @@ class AddDebitForm extends Component {
 
     render() {
         return (
-            <ModalContainer height={'50vh'}>
+            <ModalContainer  height={this.props.height ? this.props.height : '50vh'}>
                 <Box style={{height:'100%',width:'100%'}} flexDirection={'column'}>
-                    <Typography>Adicionar Debito</Typography>
-                    <Box display={'flex'} style={{height:'50vh'}} flexDirection='column' justifyContent={'center'}>
-                        <DateFieldComponent label={'Date of Debit'} date={this.state.date} onChange={(dateMoment)=> this.setState({...this.state, date: dateMoment})}/>
+                    <Typography>Adicionar Saída</Typography>
+                    <Box display={'flex'} style={{height: '100%'}} flexDirection='column' justifyContent={'center'}>
+                        <DateFieldComponent label={'Data do Débito'} date={this.state.date} onChange={(dateMoment)=> this.setState({...this.state, date: dateMoment})}/>
                         <MethodPayment paymentMethod={this.state.paymentMethod} onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
-                        <TextField  value={this.state.ref}label={'Referencia'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
+                        <TextField  value={this.state.ref}label={'Referência'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
                         <CostOfService label={'Valorização'} value={this.state.price} onChange={(value) => this.setState({...this.state, price: formatCurrencie(value)})} />
                     </Box>
-                 <Box display='flex' alignItems='flex-end'justifyContent={'flex-end'}>
+                 <Box display='flex'  style={{paddingTop: 5, marginBottom: -20}} alignItems='flex-end'justifyContent={'flex-end'}>
                     <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
                  </Box>
                 </Box>
@@ -73,6 +73,11 @@ class AddDebitForm extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        token: state.session.token
+    }
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -86,4 +91,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(null, mapDispatchToProps)(AddDebitForm)
+export default connect(mapStateToProps, mapDispatchToProps)(AddDebitForm)

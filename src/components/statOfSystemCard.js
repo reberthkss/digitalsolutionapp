@@ -7,7 +7,7 @@ import React, {Component} from "react";
 class StatOfSystemCard extends Component {
     render() {
         return (
-            <Grid item style={{minWidth:350, marginBottom:15}}>
+            <Grid item style={{minWidth:300, marginBottom:15}}>
                 <Card  elevation={10} style={{borderLeft:this.props.borderLeft}}>
                     <CardContent>
                         <Grid container direction={'row'}  justify={'space-between'}>

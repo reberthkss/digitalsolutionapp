@@ -1,1 +1,2 @@
-export const URL_BASE = 'https://us-central1-digitalsolutionapp.cloudfunctions.net/actionsValue'
+export const URL_BASE = "https://digitalsolutionapp.appspot.com"
+

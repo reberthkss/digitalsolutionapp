@@ -1,9 +1,12 @@
 import {URL_BASE} from "../consts/consts";
 
-export const removeDataDb = async (type, id) => {
-    console.log(`ID => ${id}`)
-    fetch(URL_BASE, {
+export const removeDataDb = async (screen, type, id, token) => {
+    fetch(URL_BASE+screen, {
         method: 'POST',
-        body: JSON.stringify({type: type, _id: id})
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({type, id, token})
     });
 };

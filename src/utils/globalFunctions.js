@@ -1,16 +1,17 @@
 export const formatCurrencie = (value) => {
-    let commaPosition = value.indexOf(',');
-    let dotPosition = value.indexOf('.');
-    if (commaPosition == -1 && dotPosition == -1) {
-        return value + ',00'
+    const valueString = value.toString()
+    let commaPosition = valueString.indexOf(',');
+    let dotPosition = valueString.indexOf('.');
+    if (commaPosition === -1 && dotPosition === -1) {
+        return valueString + ',00'
     }
 
     let valueSplited;
 
-    if (commaPosition == -1) {
-        valueSplited = value.split('.');
+    if (commaPosition === -1) {
+        valueSplited = valueString.split('.');
     } else {
-        valueSplited = value.split(',');
+        valueSplited = valueString.split(',');
     }
 
     if (valueSplited[1].length < 2) {
