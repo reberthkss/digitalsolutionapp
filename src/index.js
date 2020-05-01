@@ -3,10 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'typeface-nunito'
+import {PersistGate} from "redux-persist/lib/integration/react";
+import {Provider} from 'react-redux'
+import configStore from './config/persist'
+
+const {store, persistor} = configStore();
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <Provider store={store}>
+          <PersistGate persistor={persistor}>
+              <App />
+          </PersistGate>
+      </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
