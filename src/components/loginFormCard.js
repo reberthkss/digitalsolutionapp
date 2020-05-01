@@ -39,7 +39,6 @@ const doLogin = async (user, password, history, dispatch, setSnackBar) => {
         } else {
             setSnackBar(true, 'Autenticado com sucesso!', 'success')
             dispatch(markAsAuthenticated(user, res.token));
-            //#TODO LOAD ALL DATA HERE AND STORE IN REDUX
             loadData((type, payload) => dispatch(saveDataFromDb({type, payload})), res.token).then((res) => {
                 if (res.loaded) {
                     dispatch(finishLoad());
