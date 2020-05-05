@@ -15,13 +15,13 @@ class AddCustomerForm extends Component {
     state = {
         id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insertCustomer',
-        name: this.props.data ? this.props.data.name : null,
-        cnpj: this.props.data ? this.props.data.cnpj : null,
-        formalName: this.props.data ? this.props.data.formalName : null,
-        email: this.props.data ? this.props.data.email : null,
-        fone: this.props.data ? this.props.data.fone : null,
-        address: this.props.data ? this.props.data.address : null,
-        contactPerson: this.props.data ? this.props.data.contactPerson : null,
+        name: this.props.data ? this.props.data.name : true,
+        cnpj: this.props.data ? this.props.data.cnpj : true,
+        formalName: this.props.data ? this.props.data.formalName : true,
+        email: this.props.data ? this.props.data.email : true,
+        fone: this.props.data ? this.props.data.fone : true,
+        address: this.props.data ? this.props.data.address : true,
+        contactPerson: this.props.data ? this.props.data.contactPerson : true,
     };
 
     onCancel = () => {
@@ -43,7 +43,7 @@ class AddCustomerForm extends Component {
                 this.props.onSuccess('atualizado');
             }
         }).catch(err => {
-           console.log(err);
+            console.log(err);
         })
     };
 
@@ -56,23 +56,51 @@ class AddCustomerForm extends Component {
                 </Typography>
                 <form style={{height: '55vh'}}>
                     <Box display={'flex'} style={{height: '55vh'}} justifyContent={'center'} flexDirection={'column'}>
-                        <TextField label={'Cliente'} value={this.state.name}
-                                   onChange={event => this.setState({...this.state, name: event.target.value})}/>
-                        <TextField label={'CNPJ'} value={this.state.cnpj}
-                                   onChange={event => this.setState({...this.state, cnpj: event.target.value})}/>
-                        <TextField label={'Razão Social'} value={this.state.formalName}
-                                   onChange={event => this.setState({...this.state, formalName: event.target.value})}/>
-                        <TextField label={'E-mail'} value={this.state.email}
-                                   onChange={event => this.setState({...this.state, email: event.target.value})}/>
-                        <TextField label={'Telefone'} value={this.state.fone}
-                                   onChange={event => this.setState({...this.state, fone: event.target.value})}/>
-                        <TextField label={'Endereço'} value={this.state.address}
-                                   onChange={event => this.setState({...this.state, address: event.target.value})}/>
-                        <TextField label={'Responsável'} value={this.state.contactPerson}
-                                   onChange={event => this.setState({
-                                       ...this.state,
-                                       contactPerson: event.target.value
-                                   })}/>
+                        <TextField
+                            required
+                            error={!this.state.name}
+                            label={'Cliente'}
+                            value={this.state.name === true ? null : this.state.name}
+                            onChange={event => this.setState({...this.state, name: event.target.value})}/>
+                        <TextField
+                            required
+                            error={!this.state.cnpj}
+                            label={'CNPJ'}
+                            value={this.state.cnpj === true ? null : this.state.cnpj}
+                            onChange={event => this.setState({...this.state, cnpj: event.target.value})}/>
+                        <TextField
+                            required
+                            error={!this.state.formalName}
+                            label={'Razão Social'}
+                            value={this.state.formalName === true ? null : this.state.formalName}
+                            onChange={event => this.setState({...this.state, formalName: event.target.value})}/>
+                        <TextField
+                            required
+                            error={!this.state.email}
+                            label={'E-mail'}
+                            value={this.state.email === true ? null : this.state.email}
+                            onChange={event => this.setState({...this.state, email: event.target.value})}/>
+                        <TextField
+                            required
+                            error={!this.state.fone}
+                            label={'Telefone'}
+                            value={this.state.fone === true ? null : this.state.fone}
+                            onChange={event => this.setState({...this.state, fone: event.target.value})}/>
+                        <TextField
+                            required
+                            error={!this.state.address}
+                            label={'Endereço'}
+                            value={this.state.address === true ? null : this.state.address}
+                            onChange={event => this.setState({...this.state, address: event.target.value})}/>
+                        <TextField
+                            required
+                            error={!this.state.contactPerson}
+                            label={'Responsável'}
+                            value={this.state.contactPerson === true ? null : this.state.contactPerson}
+                            onChange={event => this.setState({
+                                ...this.state,
+                                contactPerson: event.target.value
+                            })}/>
                     </Box>
                     <Box display={'flex'} alignItems={'flex-end'} style={{height: '3vh'}} justifyContent={'flex-end'}>
                         <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>

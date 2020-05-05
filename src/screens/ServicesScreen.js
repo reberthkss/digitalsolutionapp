@@ -61,7 +61,7 @@ class ServicesScreen extends Component {
     }
 
     handleClose = () => {
-        this.setState({addService: false})
+        this.setState({...this.state, addService: false, data: null})
     }
 
     renderBody = () => {

@@ -38,14 +38,14 @@ class CustomersScreen extends Component {
         showSnackbar: false,
         addCustomer: false,
         loading: true,
+        data: null
     };
 
     handleClose = () => {
-        this.setState({addCustomer: !this.state.addCustomer})
+        this.setState({...this.state, addCustomer: !this.state.addCustomer, data: null})
     };
 
     componentDidMount(): void {
-
         if (this.props.token) {
             validationTokenProvider(this.props.token).then((checkedToken) => {
                 if (!checkedToken.isValid) {
@@ -61,8 +61,6 @@ class CustomersScreen extends Component {
         } else {
             this.props.history.push('/')
         }
-
-
     }
 
     renderBody = () => {

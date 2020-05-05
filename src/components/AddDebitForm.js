@@ -20,15 +20,15 @@ class AddDebitForm extends Component {
         id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insertCredit',
         date: this.props.data ? this.props.data.date : moment().valueOf() ,
-        selectedCustomer: this.props.data ? this.props.data.selectedCustomer : null,
+        selectedCustomer: this.props.data ? this.props.data.selectedCustomer : 'carteira',
         selectedService: this.props.data ? this.props.data.selectedService : null,
         selectedProduct: this.props.data ? this.props.data.selectedProduct : null,
         paymentMethod: this.props.data ? this.props.data.paymentMethod : null,
         isProduct: this.props.data ? this.props.data.isProduct : false,
         isService: this.props.data ? this.props.data.isService : false,
-        price: this.props.data ? this.props.data.price : 0,
+        price: this.props.data ? this.props.data.price : true,
         status: this.props.data ? this.props.data.status : null,
-        ref: this.props.data ? this.props.data.ref : null,
+        ref: this.props.data ? this.props.data.ref : true,
     };
 
     onCancel = () => {
@@ -61,15 +61,22 @@ class AddDebitForm extends Component {
             <ModalContainer  height={this.props.height ? this.props.height : '50vh'}>
                 <Box style={{height:'100%',width:'100%'}} flexDirection={'column'}>
                     <Typography>Adicionar Saída</Typography>
-                    <Box display={'flex'} style={{height: '100%'}} flexDirection='column' justifyContent={'center'}>
-                        <DateFieldComponent label={'Data do Débito'} date={this.state.date} onChange={(dateMoment)=> this.setState({...this.state, date: dateMoment})}/>
-                        <MethodPayment paymentMethod={this.state.paymentMethod} onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
-                        <TextField  value={this.state.ref}label={'Referência'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
-                        <CostOfService label={'Valorização'} value={this.state.price} onChange={(value) => this.setState({...this.state, price: formatCurrencie(value)})} />
-                    </Box>
-                 <Box display='flex'  style={{paddingTop: 5, marginBottom: -20}} alignItems='flex-end'justifyContent={'flex-end'}>
-                    <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
-                 </Box>
+                    <form onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            this.onSuccess()
+                            e.preventDefault()
+                        }
+                    }}>
+                        <Box display={'flex'} style={{height: '100%'}} flexDirection='column' justifyContent={'center'}>
+                            <DateFieldComponent label={'Data do Débito'} date={this.state.date} onChange={(dateMoment)=> this.setState({...this.state, date: dateMoment})}/>
+                            <MethodPayment paymentMethod={this.state.paymentMethod} onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
+                            <TextField  required error={!this.state.ref} value={this.state.ref === true ? null : this.state.ref} label={'Referência'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
+                            <CostOfService label={'Valorização'} required={true} value={this.state.price === true ? true : this.state.price} onChange={(value) => this.setState({...this.state, price: formatCurrencie(value)})} />
+                        </Box>
+                        <Box display='flex'  style={{paddingTop: 5, marginBottom: -20}} alignItems='flex-end'justifyContent={'flex-end'}>
+                            <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
+                        </Box>
+                    </form>
                 </Box>
             </ModalContainer>
         )

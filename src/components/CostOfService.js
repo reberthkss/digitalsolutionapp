@@ -17,6 +17,8 @@ export default class CostOfService extends Component {
                     InputProps={{
                         startAdornment: <InputAdornment position="start">R$</InputAdornment>,
                     }}
+                    required={this.props.required}
+                    error={this.props.required &&  !this.props.value && true }
                     label={this.props.label}
                     placeholder={'0,00'}
                     onChange={(event) => {
@@ -27,7 +29,7 @@ export default class CostOfService extends Component {
                     }}
                     type={'text'}
                     style={{width: 350}}
-                    value={`${this.state.value}`}
+                    value={this.state.value === true ? null : this.state.value}
                 />
             </div>
         )

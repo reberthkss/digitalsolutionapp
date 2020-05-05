@@ -37,14 +37,14 @@ class AddCreditForm extends Component {
         id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insertCredit',
         date: this.props.data ? this.props.data.date : moment().valueOf(),
-        selectedCustomer: this.props.data ? this.props.data.selectedCustomer : null,
+        selectedCustomer: this.props.data ? this.props.data.selectedCustomer : true,
         selectedService: this.props.data ? this.props.data.selectedService : null,
         selectedProduct: this.props.data ? this.props.data.selectedProduct : null,
         paymentMethod: this.props.data ? this.props.data.paymentMethod : null,
         isProduct: this.props.data ? this.props.data.isProduct : false,
         isService: this.props.data ? this.props.data.isService : false,
-        price: this.props.data ? this.props.data.price : null,
-        status: this.props.data ? this.props.data.status : null,
+        price: this.props.data ? this.props.data.price : true,
+        status: this.props.data ? this.props.data.status : true,
         ref: this.props.data ? this.props.data.ref : null,
     };
 
@@ -84,17 +84,22 @@ class AddCreditForm extends Component {
         return (
             <ModalContainer height={'80vh'}>
                 <Typography style={{padding: 5}}>Adicionar Novo Crédito</Typography>
-                <form style={{height: '60vh'}}>
+                <form style={{height: '60vh'}} onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        this.onSuccess()
+                        e.preventDefault()
+                    }
+                }}>
                     <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 10}}>
                         <DateFieldComponent date={this.state.date} onChange={(value) => this.setState({date: value})}
                                             label={'Data do crédito'}/>
                         <div style={{marginBottom: 5}}>
                             <FormControl style={{marginTop: 10}}>
-                                <InputLabel id={'cliente'}>Cliente</InputLabel>
+                                <InputLabel required error={!this.state.selectedCustomer} id={'cliente'}>Cliente</InputLabel>
                                 <Select
                                     labelId={'cliente'}
                                     id={'clienteSelect'}
-                                    value={this.state.selectedCustomer}
+                                    value={this.state.selectedCustomer === true ? null : this.state.selectedCustomer}
                                     //This state is LOCAL
                                     onChange={event => this.setState({
                                         ...this.state,
@@ -104,7 +109,7 @@ class AddCreditForm extends Component {
                                     MenuProps={MenuProps}
                                     style={{width: 350}}
                                 >
-                                    <MenuItem value={null} style={{height: 30}}></MenuItem>
+                                    <MenuItem value={null} style={{height: 30}}/>
                                     {
                                         this.props.listOfCustomers.map(customer => {
                                             return (
@@ -178,15 +183,15 @@ class AddCreditForm extends Component {
                                            ...this.state,
                                            paymentMethod: methodPayment
                                        })}/>
-                        <CostOfService label={'Valorização'} value={this.state.price} onChange={(value) => {
+                        <CostOfService label={'Valorização'} required={true} value={this.state.price === true ? true : this.state.price} onChange={(value) => {
                             this.setState({...this.state, price: formatCurrencie(value)});
                         }}/>
                         <FormControl>
-                            <InputLabel id={'statusPayment'}>Status do Pagamento</InputLabel>
+                            <InputLabel required error={!this.state.status} id={'statusPayment'}>Status do Pagamento</InputLabel>
                             <Select
                                 labelId={'statusPayment'}
                                 id={'statusPaymentSelect'}
-                                value={this.state.status}
+                                value={this.state.status === true ? null : this.state.status}
                                 onChange={event => this.setState({...this.state, status: event.target.value})}
                                 MenuProps={MenuProps}
                                 input={<Input/>}

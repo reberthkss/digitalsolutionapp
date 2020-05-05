@@ -170,7 +170,7 @@ class MainScreen extends Component {
                 }}>Lançamentos</Typography>
                 <EntryValueButtons onSuccess={this.handleSuccess}/>
                 <ThemeProvider theme={theme}>
-                    <EntriesTable maxHeight={370} columns={ColumnsEntries(this.state.selectDate, (selectDate) => {
+                    <EntriesTable maxHeight={585} columns={ColumnsEntries(this.state.selectDate, (selectDate) => {
                         this.setState({...this.state, selectDate})
                     })}>
                         {

@@ -83,7 +83,6 @@ const LoginScreen = () => {
             validationTokenProvider(token).then((checkedToken) => {
                 //#TODO ADD METHOD TO LOAD  ALL DATA
                 checkedToken.isValid ? history.push('/dashboard') : setLoading(false)
-
             })
         } else {
             setLoading(false);

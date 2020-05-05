@@ -62,7 +62,7 @@ class ProductsScreen extends Component {
     }
 
     handleClose = () => {
-        this.setState({addProduct: false})
+        this.setState({...this.state, addProduct: false, data: null})
     }
 
     renderBody = () => {

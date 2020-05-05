@@ -15,14 +15,22 @@ import {loadData} from "../utils/globalFunctions";
 const ButtonLogin = ({onClick}) => {
     const [isDisabled, setDisabled] = useState(false);
     return (
-        <Box display={'flex'} justifyContent={'flex-end'} style={{paddingRight: 50}}>
+        <Box display={'flex'}>
             <Button variant={'contained'}
-                    style={{background: !isDisabled ? indigo[600] : 'grey' , color: 'white'}}
-                    startIcon={< ExitToAppIcon/>} onClick={() => {
-                setDisabled(true);
-                onClick();
-                setTimeout(() => setDisabled(false), 3000);
-            }}
+                    style={{
+                        background: !isDisabled ? indigo[600] : 'grey',
+                        color: 'white',
+                        width: '100%',
+                        marginLeft: 20,
+                        marginRight: 20,
+                        borderRadius: 20
+                    }}
+                    startIcon={< ExitToAppIcon/>}
+                    onClick={() => {
+                        setDisabled(true);
+                        onClick();
+                        setTimeout(() => setDisabled(false), 3000);
+                    }}
                     disabled={isDisabled}
             >
                 Entrar
@@ -56,27 +64,35 @@ const doLogin = async (user, password, history, dispatch, setSnackBar) => {
 export const renderLoginFormCard = (history, handleUser, handlePassword, user, password, dispatch, setSnackBar, setFormToShow) => {
     return (
         <Box>
-            <Paper style={{height: 500, width: 400}}>
+            <Paper style={{height: 500, width: window.innerWidth <= 400 ? 350 : 400}}>
                 <Box display={'flex'} flexDirection={'column'} style={{height: '100%'}} justifyContent={'center'}>
                     <Typography variant={'h4'} align={'center'}
                                 style={{paddingBottom: 70, color: '#5a5c69', fontFamily: 'nunito'}}>
                         Bem - Vindo
                     </Typography>
-                    <Box display={'flex'} flexDirection={'column'}
-                         style={{paddingLeft: 50, paddingRight: 50, paddingTop: 5, paddingBottom: 5}}>
-                        <TextField label={'Digite seu usuario'} variant={'outlined'}
-                                   onChange={(event) => handleUser(event.target.value)}/>
-                    </Box>
-                    <Box display={'flex'} flexDirection={'column'}
-                         style={{paddingLeft: 50, paddingRight: 50, paddingTop: 5, paddingBottom: 5}}>
-                        <TextField label={'Digite sua senha'}
-                                   type={'password'}
-                                   onChange={async (event) => {
-                                      const value = event.target.value
-                                       handlePassword(value.toString());
-                                   }}
-                                   variant={'outlined'}/>
-                    </Box>
+                    <form
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                doLogin(user, password, history, dispatch, setSnackBar);
+                                e.preventDefault()
+                            }
+                        }}>
+                        <Box display={'flex'} flexDirection={'column'}
+                             style={{paddingLeft: 50, paddingRight: 50, paddingTop: 5, paddingBottom: 5}}>
+                            <TextField label={'Digite seu usuario'} variant={'outlined'}
+                                       onChange={(event) => handleUser(event.target.value)}/>
+                        </Box>
+                        <Box display={'flex'} flexDirection={'column'}
+                             style={{paddingLeft: 50, paddingRight: 50, paddingTop: 5, paddingBottom: 5}}>
+                            <TextField label={'Digite sua senha'}
+                                       type={'password'}
+                                       onChange={async (event) => {
+                                           const value = event.target.value
+                                           handlePassword(value.toString());
+                                       }}
+                                       variant={'outlined'}/>
+                        </Box>
+                    </form>
                     < Box display={'flex'} style={{paddingLeft: 50, paddingRight: 50, paddingTop: 5, paddingBottom: 5}}>
                         <FormControlLabel control={< Checkbox checked={"todo"} name={'remember-me?'}/>}
                                           label={'Lembrar de mim?'}/>
@@ -84,10 +100,12 @@ export const renderLoginFormCard = (history, handleUser, handlePassword, user, p
                     <Button
                         style={{margin: 20, color: indigo[500], borderRadius: 20, border: `2px solid ${indigo[500]}`}}
                         onClick={() => setFormToShow('register')}
-                        >
+                    >
                         Registrar
                     </Button>
-                    <ButtonLogin onClick={() => {doLogin(user, password, history, dispatch, setSnackBar)}} />
+                    <ButtonLogin onClick={() => {
+                        doLogin(user, password, history, dispatch, setSnackBar)
+                    }}/>
                 </Box>
             </Paper>
         </Box>

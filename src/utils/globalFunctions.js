@@ -2,6 +2,7 @@ import {red, yellow} from "@material-ui/core/colors";
 import GetDataDbProvider from "../services/getDataDbProvider";
 
 export const formatCurrencie = (value) => {
+    if (value === null ||  value === undefined) return '0,00';
     const valueString = value.toString()
     let commaPosition = valueString.indexOf(',');
     let dotPosition = valueString.indexOf('.');
