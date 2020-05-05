@@ -13,7 +13,7 @@ import {connect} from "react-redux";
 class AddCustomerForm extends Component {
 
     state = {
-        id: this.props.data ? this.props.data._id : null,
+        id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insertCustomer',
         name: this.props.data ? this.props.data.name : null,
         cnpj: this.props.data ? this.props.data.cnpj : null,
@@ -30,6 +30,7 @@ class AddCustomerForm extends Component {
 
     onSuccess = () => {
         const newCustomer = this.state;
+        console.log(newCustomer);
 
         manageDataInDb('customer', newCustomer, this.props.token).then((id) => {
             newCustomer.id = id;
