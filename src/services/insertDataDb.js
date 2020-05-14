@@ -10,6 +10,6 @@ export const manageDataInDb = async (screen, data, token) => {
         body: JSON.stringify({...data, token}),
     });
    const resJ = await res.json();
-   console.log(resJ);
+   console.log(resJ)
    return resJ.id;
 };

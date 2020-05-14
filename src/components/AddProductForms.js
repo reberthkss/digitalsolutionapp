@@ -13,12 +13,11 @@ import {connect} from "react-redux";
 import {formatCurrencie} from "../utils/globalFunctions";
 
 class AddProductForms extends Component {
-
     state = {
         id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insert_product',
-        name: this.props.data ? this.props.data.name : null,
-        brand: this.props.data ? this.props.data.brand : null,
+        name: this.props.data ? this.props.data.name : true,
+        brand: this.props.data ? this.props.data.brand : true,
         amount: this.props.data ? this.props.data.amount : null,
         priceCost: this.props.data ? this.props.data.priceCost : null,
         priceSell: this.props.data ? this.props.data.priceSell : null,
@@ -30,6 +29,11 @@ class AddProductForms extends Component {
 
     onSuccess = () => {
         const newProduct = this.state;
+        if (newProduct.name === true || newProduct.name === null
+            && newProduct.brand === true || newProduct.brand === null) {
+            this.setState({...this.state, name: null, brand: null});
+            return
+        }
         manageDataInDb('product', newProduct, this.props.token).then(id => {
             newProduct.id = id;
             if (this.state.type === 'insert_product') {
@@ -50,16 +54,37 @@ class AddProductForms extends Component {
                 <Typography>
                     Novo Produto
                 </Typography>
-                <form style={{height: '40vh'}}>
+                <form style={{height: '40vh'}} onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        this.onSuccess()
+                        e.preventDefault()
+                    }
+                }}>
                     <Box style={{height: '40vh'}} display={'flex'} flexDirection={'column'}>
                         <Box display={'flex'} flexDirection={'column'} style={{height: '40vh'}}
                              justifyContent={'center'}>
-                            <TextField label={'Nome'} value={this.state.name}
-                                       onChange={event => this.setState({...this.state, name: event.target.value})}/>
-                            <TextField label={'Marca'} value={this.state.brand}
-                                       onChange={event => this.setState({...this.state, brand: event.target.value})}/>
-                            <TextField label={'Quantidade'} value={this.state.amount} type={'number'}
-                                       onChange={event => this.setState({...this.state, amount: event.target.value})}/>
+                            <TextField
+                                required
+                                error={!this.state.name}
+                                label={'Nome'}
+                                value={this.state.name === true ? null : this.state.name}
+                                onChange={event => this.setState({...this.state, name: event.target.value})}
+                                helperText={!this.state.name ? 'Digite o Nome do Produto' : null}
+                            />
+                            <TextField
+                                required
+                                error={!this.state.brand}
+                                label={'Marca'}
+                                value={this.state.brand === true ? null : this.state.brand}
+                                onChange={event => this.setState({...this.state, brand: event.target.value})}
+                                helperText={!this.state.brand ? 'Digite a Marca do Produto' : null}
+                            />
+                            <TextField
+                                label={'Quantidade'}
+                                value={this.state.amount}
+                                type={'number'}
+                                onChange={event => this.setState({...this.state, amount: !event.target.value ? '0' : event.target.value })}
+                            />
                             <CostOfService label={'Preço de custo'} value={this.state.priceCost}
                                            onChange={(value) => this.setState({
                                                ...this.state,

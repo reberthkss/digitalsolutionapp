@@ -15,7 +15,7 @@ class AddServiceForm extends Component {
     state = {
         id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insert_service',
-        descricao: this.props.data ? this.props.data.descricao : null,
+        descricao: this.props.data ? this.props.data.descricao : true,
         valorizacao: this.props.data ? this.props.data.valorizacao : null,
     };
 
@@ -25,6 +25,10 @@ class AddServiceForm extends Component {
 
     onSuccess = () => {
         const newService = this.state
+        if (this.state.descricao === null || this.state.descricao === true) {
+            this.setState({...this.state, descricao: null})
+            return
+        }
         manageDataInDb('services', newService, this.props.token).then((id) => {
             newService.id = id;
             if (this.state.type === 'insert_service') {
@@ -44,15 +48,29 @@ class AddServiceForm extends Component {
                 <Typography>
                     Novo serviço
                 </Typography>
-                <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 20, paddingRight: 20}}>
-                    <Box display={'flex'} flexDirection={'column'}>
-                        <TextField label={'Descrição'} value={this.state.descricao} onChange={event => this.setState({...this.state, descricao: event.target.value})}/>
-                        <CostOfService label={'Valorização'} value={this.state.valorizacao} onChange={value => this.setState({...this.state, valorizacao: formatCurrencie(value)})}/>
+                <form
+                    onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        this.onSuccess()
+                        e.preventDefault()
+                    }
+                }}>
+                    <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 20, paddingRight: 20}}>
+                        <Box display={'flex'} flexDirection={'column'}>
+                            <TextField
+                                label={'Descrição'}
+                                error={!this.state.descricao}
+                                value={this.state.descricao === true ? null : this.state.descricao}
+                                onChange={event => this.setState({...this.state, descricao: event.target.value})}
+                                helperText={this.state.descricao ? null : 'Digite o nome do serviço'}
+                            />
+                            <CostOfService label={'Valorização'} value={this.state.valorizacao} onChange={value => this.setState({...this.state, valorizacao: formatCurrencie(value)})}/>
+                        </Box>
                     </Box>
-                </Box>
-                <Box display={'flex'} style={{height: '7vh'}} alignItems={'flex-end'} justifyContent={'flex-end'}>
-                    <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
-                </Box>
+                    <Box display={'flex'} style={{height: '7vh'}} alignItems={'flex-end'} justifyContent={'flex-end'}>
+                        <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
+                    </Box>
+                </form>
             </ModalContainer>
         )
     }

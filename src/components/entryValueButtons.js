@@ -23,7 +23,7 @@ class EntryValueButtons extends Component {
         let {classes} = this.props;
         return (
             <Box display={'flex'} flexDirection={'column'}>
-                <Fab onClick={()=>this.setState({...this.state, showNewCredit: true})} className={classes.FloatEnterButton} >
+                <Fab onClick={()=> this.setState({...this.state, showNewCredit: true})} className={classes.FloatEnterButton} >
                     <AddBoxRoundedIcon />
                     </Fab>
                 <Fab onClick={()=>this.setState({...this.state, showNewDebit: true})} className={classes.FloatDebitButton} >
@@ -35,7 +35,7 @@ class EntryValueButtons extends Component {
                 </ModalBody>
 
                 <ModalBody open={this.state.showNewDebit} onClose={this.handleCloseDebit}>
-                    <AddDebitForm height={'30vh'} onSuccess={(action) => this.props.onSuccess('Debito', action)} update={() => this.setState({...this.state, showNewDebit: false})} onCancel={()=>this.setState({...this.state, showNewDebit: false})}/>
+                    <AddDebitForm height={'30vh'} onSuccess={(actionType, action) => this.props.onSuccess(actionType, action)} update={() => this.setState({...this.state, showNewDebit: false})} onCancel={()=>this.setState({...this.state, showNewDebit: false})}/>
                 </ModalBody>
             </Box>
 

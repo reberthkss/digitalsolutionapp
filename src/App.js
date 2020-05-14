@@ -8,6 +8,7 @@ import Box from '@material-ui/core/Box'
 import MainScreen from "./screens/mainScreen";
 import {
     BrowserRouter as Router,
+    useHistory,
     Switch,
     Route,
 } from 'react-router-dom'
@@ -20,20 +21,14 @@ import CustomersScreen from "./screens/CustomersScreen";
 import ServicesScreen from "./screens/ServicesScreen";
 import ProductsScreen from "./screens/ProductsScreen";
 import {validationTokenProvider} from './services/validationTokenProvider'
+import moment from "moment";
 
 class App extends Component {
     state = {
-        loading: false,
         scrollToTop: false,
         showDrawerMenu: false,
-        authenticated: false,
         screen: 'loginScreen'
     };
-    componentDidMount(): void {
-        this.validToken().then(isValid => {
-            console.log(isValid)
-        })
-    }
 
     showMenu = () => {
         this.setState({...this.state, showDrawerMenu: !this.state.showDrawerMenu})
@@ -43,25 +38,19 @@ class App extends Component {
         this.setState({...this.state, screen: screen})
     };
 
-    validToken = async () => {
-        if (this.props.token) {
-            const stillValid = await validationTokenProvider(this.props.token);
-            console.log(stillValid);
-        }
-    }
-    renderLoginScreen =  () => {
+    RenderLoginScreen =  () => {
         return (
             <Switch>
-                <Route exact path={'/'} component={LoginScreen}/>
+                <Route exact path={'/'}  component={LoginScreen}/>
                 <Box display={'flex'}>
                     {this.state.showDrawerMenu ?
                         <NavBarMobile height={this.state.height} setPage={this.setPage}/> : null}
                     <div style={{width: '100%'}}>
                         <NavBar menuIconClick={this.showMenu} user={this.props.user}/>
-                        <Route exact path={'/dashboard'} component={MainScreen}/>
-                        <Route exact path={'/customers'} component={CustomersScreen}/>
-                        <Route exact path={'/services'} component={ServicesScreen}/>
-                        <Route exact path={'/products'} component={ProductsScreen}/>
+                            <Route exact path={'/dashboard'} component={MainScreen}/>
+                            <Route exact path={'/customers'} component={CustomersScreen}/>
+                            <Route exact path={'/services'} component={ServicesScreen}/>
+                            <Route exact path={'/products'} component={ProductsScreen}/>
                     </div>
                 </Box>
             </Switch>
@@ -86,7 +75,7 @@ class App extends Component {
         return (
             <Router>
                 {
-                    !this.state.authenticated ? this.renderLoginScreen() : null
+                    this.RenderLoginScreen()
                 }
             </Router>
 
@@ -95,8 +84,8 @@ class App extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-        token: state.session.token,
         user: state.session.user
     }
 }
+
 export default connect(mapStateToProps)(App)

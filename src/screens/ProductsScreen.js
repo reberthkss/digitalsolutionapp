@@ -10,7 +10,7 @@ import AddProductForms from "../components/AddProductForms";
 import {connect} from 'react-redux'
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import {deleteProduct} from "../redux/actions";
+import {deleteProduct, saveDataFromDb} from "../redux/actions";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
@@ -23,6 +23,14 @@ import {ThemeProvider} from "@material-ui/core";
 import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
 import Fab from "@material-ui/core/Fab";
 import {renderLoading} from "../utils/loading";
+import GetDataDbProvider from "../services/getDataDbProvider";
+import {validationTokenProvider} from "../services/validationTokenProvider";
+
+export const loadProductData = async (saveData, token) => {
+    const allProductsFromDb = await GetDataDbProvider.loadDataProvider('product', 'get_products', token);
+    await saveData('getProducts', allProductsFromDb);
+    return {loaded: true}
+}
 
 const columnsProducts = ['Nome', 'Marca', 'Quantidade em estoque', 'Preço de custo', 'Preço de venda', 'Ações'];
 class ProductsScreen extends Component {
@@ -32,8 +40,29 @@ class ProductsScreen extends Component {
         message: '',
     };
 
+    componentDidMount(): void {
+
+        if (this.props.token) {
+            validationTokenProvider(this.props.token).then((checkedToken) => {
+                if (!checkedToken.isValid) {
+                    this.props.history.push('/');
+                    return;
+                }
+                loadProductData(this.props.saveData, this.props.token).then((res) => {
+                    if (res.loaded) {
+                        this.setState({...this.state, loading: false})
+                    }
+                })
+            })
+        } else {
+            this.props.history.push('/')
+        }
+
+
+    }
+
     handleClose = () => {
-        this.setState({addProduct: false})
+        this.setState({...this.state, addProduct: false, data: null})
     }
 
     renderBody = () => {
@@ -101,9 +130,9 @@ class ProductsScreen extends Component {
                 </ModalBody>
             </div>
         )
-    }
+    };
     render() {
-        return this.props.loading ? renderLoading() : this.renderBody();
+        return this.props.loading  || this.state.loading? renderLoading() : this.renderBody();
     }
 }
 
@@ -119,6 +148,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         removeProduct: (productId) => {
             dispatch(deleteProduct(productId))
+        },
+        saveData: (type, payload) => {
+            dispatch(saveDataFromDb({type, payload}))
         }
     }
 }

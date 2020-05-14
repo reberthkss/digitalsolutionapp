@@ -26,7 +26,7 @@ class NavBar extends Component {
     render() {
         const {classes} = this.props
         return (
-            <div style={{ width: '100%' }}>
+            <div style={{ width: '100%', height: '6.5%'}}>
                 <AppBar position={'static'} style={{backgroundColor:'white'}}>
                     <Mobile>
                        <Box display={'flex'} flexDirection={'row'}>
@@ -36,7 +36,7 @@ class NavBar extends Component {
                              </IconButton>
                           </Box>
                           <Box m={1}>
-                              <Avatar>{this.props.user.substring(0,2)}</Avatar>
+                              <Avatar>{this.props.user ? this.props.user.substring(0,2) : 'u'}</Avatar>
                           </Box>
                        </Box>
                     </Mobile>
@@ -49,7 +49,7 @@ class NavBar extends Component {
                                 <span style={{color:'red'}}>{this.props.user}</span>
                             </Box>
                             <Box m={1}>
-                                <Avatar>{this.props.user.substring(0,2)}</Avatar>
+                                <Avatar>{this.props.user ? this.props.user.substring(0,1) : 'u'}</Avatar>
                             </Box>
                         </Box>
                     </Desktop>

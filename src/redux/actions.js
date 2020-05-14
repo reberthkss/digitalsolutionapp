@@ -58,10 +58,13 @@ export const saveDataFromDb = (action) => {
     return action;
 };
 
-export const finishLoadAllData = () => {
-    return {type: 'finishLoadAllData'}
+export const finishLoad = () => {
+    return {type: 'finishload'}
 }
 
+export const loadingAllData = () => {
+    return {type: 'loadingAllData'}
+}
 export const markAsAuthenticated = (user, token) => {
     return {type: 'authenticated', payload: {user, token}}
 };

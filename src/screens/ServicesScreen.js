@@ -16,7 +16,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import {removeDataDb} from "../services/removeDataDb";
 import IconButton from "@material-ui/core/IconButton";
 import ModalBody from "../components/ModalBody";
-import {deleteService} from "../redux/actions";
+import {deleteService, saveDataFromDb} from "../redux/actions";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
 import Fab from "@material-ui/core/Fab";
@@ -24,18 +24,44 @@ import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
 import theme from "../themes/tableTheme";
 import {ThemeProvider} from "@material-ui/core";
 import {renderLoading} from "../utils/loading";
-
+import GetDataDbProvider from "../services/getDataDbProvider";
+import {validationTokenProvider} from "../services/validationTokenProvider";
 
 const columnsService = ['Descrição', 'Valorização', 'Ações'];
+export const loadServiceData = async (saveData, token) => {
+    const allServicesFromDb = await GetDataDbProvider.loadDataProvider('services', 'get_services', token);
+    await saveData('getServices', allServicesFromDb);
+    return {loaded: true}
+};
 
 class ServicesScreen extends Component {
     state = {
         showSnackbar: false,
         addService: false,
+        loading: true,
     };
 
+    componentDidMount(): void {
+        if (this.props.token) {
+            validationTokenProvider(this.props.token).then((checkedToken) => {
+                if (!checkedToken.isValid) {
+                    this.props.history.push('/');
+                    return;
+                }
+                loadServiceData(this.props.saveData, this.props.token).then((res) => {
+                    if (res.loaded) {
+                        this.setState({...this.state, loading: false});
+                    }
+                })
+            })
+        } else {
+            this.props.history.push('/');
+        }
+
+    }
+
     handleClose = () => {
-        this.setState({addService: false})
+        this.setState({...this.state, addService: false, data: null})
     }
 
     renderBody = () => {
@@ -62,7 +88,7 @@ class ServicesScreen extends Component {
                                                             <EditIcon />
                                                         </IconButton>
                                                         <IconButton onClick={ () => {
-                                                            removeDataDb('services', 'remove_service', service._id, this.props.token)
+                                                            removeDataDb('services', 'remove_service', service.id, this.props.token)
                                                             this.props.removeService(service.id);
                                                             this.setState({...this.state, showSnackbar: true, message: 'Serviço removido com sucesso!'});
                                                         }
@@ -101,7 +127,7 @@ class ServicesScreen extends Component {
         )
     }
     render() {
-        return this.props.loading ? renderLoading() : this.renderBody();
+        return this.props.loading || this.state.loading ? renderLoading() : this.renderBody();
     }
 }
 
@@ -118,6 +144,9 @@ const mapDispatchToProps = dispatch => {
     return {
         removeService: (serviceId) => {
             dispatch(deleteService(serviceId))
+        },
+        saveData: (type, payload) => {
+            dispatch(saveDataFromDb({type, payload}))
         }
     }
 };

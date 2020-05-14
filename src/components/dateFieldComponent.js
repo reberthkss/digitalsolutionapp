@@ -10,7 +10,7 @@ export default class DateFieldComponent extends Component {
                 name={'date'}
                 InputLabelProps={{shrink: true, required: true }}
                 label={this.props.label}
-                onChange={event => this.props.onChange(event.target.value)}
+                onChange={event => this.props.onChange(moment(event.target.value).valueOf())}
                 defaultValue={moment(this.props.date).format('YYYY-MM-DD')}
                 type={'date'}
             />

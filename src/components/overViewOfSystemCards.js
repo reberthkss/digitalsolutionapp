@@ -14,7 +14,7 @@ import CallReceivedIcon from '@material-ui/icons/CallReceived';
 class OverViewOfSystemCards extends Component {
 
     getValuePayed = (listValues) => {
-        console.log(listValues);
+        // console.log(listValues);
         if (!listValues) return 0;
         if (listValues.length === 0) return 0;
         return listValues.map((value) => value.price).reduce((a, b) => parseFloat(a)+parseFloat(b));

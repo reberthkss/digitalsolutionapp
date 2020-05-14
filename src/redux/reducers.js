@@ -1,3 +1,5 @@
+import {getObjType} from "../utils/globalFunctions";
+
 export const listCustomers = (state = [], action) => {
     if (action.type === 'doLogout') {
         return [];
@@ -88,7 +90,7 @@ export const listDebitsCredits = (state = [], action) => {
 
 
     if (action.type === 'removeValue') {
-        return state.filter((it) => it._id !== action.payload);
+        return state.filter((it) => it.id !== action.payload);
     }
 
 
@@ -97,7 +99,7 @@ export const listDebitsCredits = (state = [], action) => {
     }
 
     if (action.type === 'updateValue') {
-        const newValues = state.filter((value) => value._id !== action.payload._id);
+        const newValues = state.filter((value) => value.id !== action.payload.id);
         return [...newValues, action.payload]
     }
 
@@ -105,35 +107,76 @@ export const listDebitsCredits = (state = [], action) => {
 };
 
 
-export const listFilteredValues = (state = {}, action) => {
+export const listFilteredValues = (state = {payed:[], unpayed:[], opened: []}, action) => {
     if (action.type === 'doLogout') {
         return {};
     }
 
     if (action.type === 'saveFilteredValues') {
+        let prevState = {...state};
+        if (action.payload.status === null) {
+            prevState.payed.push(action.payload);
+            return prevState;
+        }
         switch (action.payload.status) {
-            case 'payed':
-                state.payed.push(action.payload);
-                return {...state, payed: state.payed}
+            case 'payed' || null:
+                prevState.payed.push(action.payload)
+               return prevState;
             case 'unpayed':
-                state.unpayed.push(action.payload)
-                return {...state, unpayed: state.unpayed}
+                prevState.unpayed.push(action.payload);
+               return prevState;
             case 'opened':
-                state.opened.push(action.payload)
-                return {...state, opened: state.opened}
+                prevState.opened.push(action.payload);
+                return prevState;
             default :
                 return action.payload
         }
     }
 
     if (action.type === 'removeFilteredValue') {
+        if (action.payload.status === null) {
+            const filteredPayed = state.payed.filter((value) => value.id !== action.payload.id);
+            return {...state, payed: [...filteredPayed]}
+        }
+
         switch (action.payload.status) {
             case 'payed':
-                return {...state, payed: state.payed.filter(value => value._id !== action.payload._id)};
+                return {...state, payed: state.payed.filter(value => value.id !== action.payload.id)};
             case 'unpayed':
-                return {...state, unpayed: state.unpayed.filter(value => value._id !== action.payload._id)};
+                return {...state, unpayed: state.unpayed.filter(value => value.id !== action.payload.id)};
             case 'opened':
-                return {...state, opened: state.opened.filter(value => value._id !== action.payload._id)};
+                return {...state, opened: state.opened.filter(value => value.id !== action.payload.id)};
+        }
+    }
+
+    if (action.type === 'updateFilteredValue') {
+        const oldValue = state.payed.concat(state.unpayed, state.opened).filter((value) => value.id === action.payload.id);
+        let filteredValues;
+        const prevState = {...state};
+
+
+        if (action.payload.status === null) {
+            const oldListValues = state.payed.filter((value) => value.id !== action.payload.id);
+            return {...state, payed: [...oldListValues, action.payload]}
+        }
+
+        if (oldValue.status !== action.payload.status) {
+            prevState[oldValue[0].status] = prevState[oldValue[0].status].filter((value) => value.id !== action.payload.id);
+            prevState[action.payload.status].push(action.payload);
+            return prevState
+        }
+        switch (action.payload.status) {
+            case 'payed':
+                filteredValues = state.payed.filter((value) => value.id !== action.payload.id);
+                return {...state, payed: [...filteredValues, action.payload]};
+            case 'opened':
+                 filteredValues = state.opened.filter((value) => value.id !== action.payload.id);
+                return {...state, opened: [...filteredValues, action.payload]};
+            case 'unpayed':
+                filteredValues = state.unpayed.filter((value) => value.id !== action.payload.id);
+                return {...state, unpayed: [...filteredValues, action.payload]};
+            default:
+                return prevState;
         }
     }
 
@@ -141,16 +184,14 @@ export const listFilteredValues = (state = {}, action) => {
 };
 
 export const loadAllData = (state = true, action) => {
-    if (action.type === 'doLogout') {
-        return true;
+    const type = action.type;
+
+    if (type === 'finishload') {
+        return false;
     }
 
-    const type = action.type;
-    if (type === 'getProducts' || type === 'getCustomers' || type === 'getServices' || type === 'saveCreditsDebits' ) {
-        return true
-    }
-    if (type === 'finishLoadAllData') {
-        return false
+    if (type === 'doLogout') {
+        return true;
     }
 
     return state
@@ -162,7 +203,6 @@ export const session = (state = {user: null, token: null}, action) => {
     }
 
     if (action.type === 'authenticated'){
-        console.log(action);
         return action.payload
     }
     return state;

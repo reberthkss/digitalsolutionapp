@@ -23,20 +23,45 @@ import theme from "../themes/tableTheme";
 import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
 import Fab from "@material-ui/core/Fab";
 import {renderLoading} from "../utils/loading";
-
-
-
+import {loadData} from "../utils/globalFunctions";
+import GetDataDbProvider from "../services/getDataDbProvider";
+import {validationTokenProvider} from "../services/validationTokenProvider";
 
 const columnsTable = ['Cliente', 'CNPJ', 'Razão Social', 'E-mail', 'Telefone', 'Endereço', 'Responsável', 'Ações'];
+export const loadCustomerData = async (saveData, token) => {
+    const allCustomersFromDb = await GetDataDbProvider.loadDataProvider('customer','getCustomers', token);
+    await saveData('getCustomers', allCustomersFromDb);
+    return {loaded: true}
+}
 class CustomersScreen extends Component {
     state = {
         showSnackbar: false,
         addCustomer: false,
+        loading: true,
+        data: null
     };
 
     handleClose = () => {
-        this.setState({addCustomer: !this.state.addCustomer})
+        this.setState({...this.state, addCustomer: !this.state.addCustomer, data: null})
     };
+
+    componentDidMount(): void {
+        if (this.props.token) {
+            validationTokenProvider(this.props.token).then((checkedToken) => {
+                if (!checkedToken.isValid) {
+                    this.props.history.push('/');
+                    return;
+                }
+                loadCustomerData(this.props.saveData, this.props.token).then((res) => {
+                    if (res.loaded) {
+                        this.setState({...this.state, loading: false})
+                    }
+                })
+            })
+        } else {
+            this.props.history.push('/')
+        }
+    }
 
     renderBody = () => {
         const {classes} = this.props;
@@ -102,7 +127,7 @@ class CustomersScreen extends Component {
         )
     }
     render() {
-     return  this.props.loading ? renderLoading() : this.renderBody();
+     return  this.props.loading || this.state.loading ? renderLoading() : this.renderBody();
     }
 }
 
@@ -111,7 +136,6 @@ const mapStateToProps = (state) => {
     return {
         token: state.session.token,
         customers: state.listCustomers,
-        loading: state.loadAllData,
     }
 };
 
@@ -119,6 +143,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         removeCustomer: (customerId) => {
             dispatch(deleteCustomer(customerId))
+        },
+        saveData: (type, payload) => {
+            dispatch({type, payload})
         }
     }
 }

@@ -1,7 +1,11 @@
 import {validationTokenService} from "./validationTokenService";
 
 export const validationTokenProvider = async (token) => {
-    const result = await validationTokenService(token);
-    return result;
+    try {
+        const result = await validationTokenService(token);
+        return result;
+    } catch(e) {
+        throw Error(e.message)
+    }
 
 }

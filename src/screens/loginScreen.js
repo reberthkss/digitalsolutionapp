@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {indigo} from "@material-ui/core/colors";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
@@ -18,6 +18,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import {renderLoginFormCard} from "../components/loginFormCard";
 import {renderSignUpForm} from "../components/signUpFormCard";
+import {validationTokenProvider} from "../services/validationTokenProvider";
+import {renderLoading} from "../utils/loading";
 
 const Desktop = ({children}) => {
     const isDesktop = useMediaQuery({
@@ -43,7 +45,6 @@ const renderImageCard = () => {
 
 
 const renderSnackBar = (open, message, severity, setSnackBar) => {
-    console.log(open, message, severity);
     return (
         <Snackbar open={open} autoHideDuration={2000} onClose={() => setSnackBar(false, null, null)}>
             <MuiAlert severity={severity} variant={'filled'}
@@ -59,21 +60,43 @@ const renderBody = (history, handleUser, handleEmail, handlePassword, handleSecr
             {
                 formToShow === 'login' ?
                     renderLoginFormCard(history, handleUser, handlePassword, user, password, dispatch, setSnackBar, setFormToShow) :
-                    renderSignUpForm(handleUser, handleEmail, handlePassword,  handleSecret, user, email, password, secret, setSnackBar, setFormToShow)
+                    renderSignUpForm(handleUser, handleEmail, handlePassword, handleSecret, user, email, password, secret, setSnackBar, setFormToShow)
             }
         </Box>
     )
 };
 
 const LoginScreen = () => {
-    const [snackBar, setSnackBar] = useState({open: false, message: null, severity: null});
-    const [formToShow, setFormToShow] = useState('login');
-    const history = useHistory();
-    const dispatch = useDispatch();
-    let [user, setUser] = useState(null);
-    let [password, setPassword] = useState(null);
-    let [secretPass, setSecret] = useState(null);
-    let [email, setEmail] = useState(null);
+    const [snackBar, setSnackBar] = useState({open: false, message: null, severity: null}),
+        [loading, setLoading] = useState(true),
+        [formToShow, setFormToShow] = useState('login'),
+        [user, setUser] = useState(null),
+        [password, setPassword] = useState(null),
+        [secretPass, setSecret] = useState(null),
+        [email, setEmail] = useState(null),
+        history = useHistory(),
+        dispatch = useDispatch(),
+        {token} = useSelector(state => state.session);
+
+    useEffect(() => {
+        if (token) {
+            validationTokenProvider(token).then((checkedToken) => {
+                //#TODO ADD METHOD TO LOAD  ALL DATA
+                checkedToken.isValid ? history.push('/dashboard') : setLoading(false)
+            })
+        } else {
+            setLoading(false);
+        }
+    });
+
+    if (loading) {
+        return (
+            <Box style={{height: '100vh'}}>
+                {renderLoading()}
+            </Box>
+        )
+    }
+
     return (
         <div style={{width: '100%', height: '100vh', background: indigo['A400']}}>
             <Box display={'flex'} flexDirection={'column'} style={{height: '100%', width: '100%'}}
