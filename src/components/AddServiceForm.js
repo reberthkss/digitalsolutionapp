@@ -16,7 +16,7 @@ class AddServiceForm extends Component {
         id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insert_service',
         descricao: this.props.data ? this.props.data.descricao : true,
-        valorizacao: this.props.data ? this.props.data.valorizacao : null,
+        valorizacao: this.props.data ? this.props.data.valorizacao : true,
     };
 
     onCancel = ()=> {
