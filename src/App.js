@@ -47,10 +47,10 @@ class App extends Component {
                         <NavBarMobile height={this.state.height} setPage={this.setPage}/> : null}
                     <div style={{width: '100%'}}>
                         <NavBar menuIconClick={this.showMenu} user={this.props.user}/>
-                        <Route exact path={'/dashboard'} component={MainScreen}/>
-                        <Route exact path={'/customers'} component={CustomersScreen}/>
-                        <Route exact path={'/services'} component={ServicesScreen}/>
-                        <Route exact path={'/products'} component={ProductsScreen}/>
+                            <Route exact path={'/dashboard'} component={MainScreen}/>
+                            <Route exact path={'/customers'} component={CustomersScreen}/>
+                            <Route exact path={'/services'} component={ServicesScreen}/>
+                            <Route exact path={'/products'} component={ProductsScreen}/>
                     </div>
                 </Box>
             </Switch>

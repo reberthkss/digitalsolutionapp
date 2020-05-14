@@ -20,7 +20,7 @@ class AddDebitForm extends Component {
         id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insertCredit',
         date: this.props.data ? this.props.data.date : moment().valueOf() ,
-        selectedCustomer: this.props.data ? this.props.data.selectedCustomer : 'carteira',
+        selectedCustomer: this.props.data ? this.props.data.selectedCustomer : null,
         selectedService: this.props.data ? this.props.data.selectedService : null,
         selectedProduct: this.props.data ? this.props.data.selectedProduct : null,
         paymentMethod: this.props.data ? this.props.data.paymentMethod : null,
@@ -37,9 +37,14 @@ class AddDebitForm extends Component {
 
     onSuccess = () => {
         let newDebit = this.state;
+        if (newDebit.price === true || newDebit.price === null) {
+            this.setState({...this.state, price: null});
+            return;
+        }
         newDebit.price = -Math.abs(parseFloat(newDebit.price));
         manageDataInDb('values', newDebit, this.props.token).then(res => {
             newDebit.id = res;
+            console.log(this.state.type);
             if (this.state.type === 'insertCredit') {
                 this.props.insertData(newDebit);
                 this.props.saveData({type: 'saveFilteredValues', payload: newDebit})
@@ -71,7 +76,7 @@ class AddDebitForm extends Component {
                             <DateFieldComponent label={'Data do Débito'} date={this.state.date} onChange={(dateMoment)=> this.setState({...this.state, date: dateMoment})}/>
                             <MethodPayment paymentMethod={this.state.paymentMethod} onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
                             <TextField  required error={!this.state.ref} value={this.state.ref === true ? null : this.state.ref} label={'Referência'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
-                            <CostOfService label={'Valorização'} required={true} value={this.state.price === true ? true : this.state.price} onChange={(value) => this.setState({...this.state, price: formatCurrencie(value)})} />
+                            <CostOfService label={'Valorização'} value={this.state.price} onChange={(value) => this.setState({...this.state, price: formatCurrencie(value)})} />
                         </Box>
                         <Box display='flex'  style={{paddingTop: 5, marginBottom: -20}} alignItems='flex-end'justifyContent={'flex-end'}>
                             <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>

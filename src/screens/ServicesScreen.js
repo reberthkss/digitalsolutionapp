@@ -88,7 +88,7 @@ class ServicesScreen extends Component {
                                                             <EditIcon />
                                                         </IconButton>
                                                         <IconButton onClick={ () => {
-                                                            removeDataDb('services', 'remove_service', service._id, this.props.token)
+                                                            removeDataDb('services', 'remove_service', service.id, this.props.token)
                                                             this.props.removeService(service.id);
                                                             this.setState({...this.state, showSnackbar: true, message: 'Serviço removido com sucesso!'});
                                                         }

@@ -26,7 +26,7 @@ class NavBar extends Component {
     render() {
         const {classes} = this.props
         return (
-            <div style={{ width: '100%' }}>
+            <div style={{ width: '100%', height: '6.5%'}}>
                 <AppBar position={'static'} style={{backgroundColor:'white'}}>
                     <Mobile>
                        <Box display={'flex'} flexDirection={'row'}>

@@ -25,6 +25,10 @@ class AddServiceForm extends Component {
 
     onSuccess = () => {
         const newService = this.state
+        if (this.state.descricao === null || this.state.descricao === true) {
+            this.setState({...this.state, descricao: null})
+            return
+        }
         manageDataInDb('services', newService, this.props.token).then((id) => {
             newService.id = id;
             if (this.state.type === 'insert_service') {
@@ -44,7 +48,8 @@ class AddServiceForm extends Component {
                 <Typography>
                     Novo serviço
                 </Typography>
-                <form onKeyDown={(e) => {
+                <form
+                    onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         this.onSuccess()
                         e.preventDefault()
@@ -52,7 +57,13 @@ class AddServiceForm extends Component {
                 }}>
                     <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 20, paddingRight: 20}}>
                         <Box display={'flex'} flexDirection={'column'}>
-                            <TextField required error={!this.state.descricao} label={'Descrição'} value={this.state.descricao === true ? null : this.state.descricao} onChange={event => this.setState({...this.state, descricao: event.target.value})}/>
+                            <TextField
+                                label={'Descrição'}
+                                error={!this.state.descricao}
+                                value={this.state.descricao === true ? null : this.state.descricao}
+                                onChange={event => this.setState({...this.state, descricao: event.target.value})}
+                                helperText={this.state.descricao ? null : 'Digite o nome do serviço'}
+                            />
                             <CostOfService label={'Valorização'} value={this.state.valorizacao} onChange={value => this.setState({...this.state, valorizacao: formatCurrencie(value)})}/>
                         </Box>
                     </Box>

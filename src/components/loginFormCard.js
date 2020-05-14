@@ -97,15 +97,16 @@ export const renderLoginFormCard = (history, handleUser, handlePassword, user, p
                         <FormControlLabel control={< Checkbox checked={"todo"} name={'remember-me?'}/>}
                                           label={'Lembrar de mim?'}/>
                     </Box>
+                    <ButtonLogin onClick={() => {
+                        doLogin(user, password, history, dispatch, setSnackBar)
+                    }}/>
                     <Button
                         style={{margin: 20, color: indigo[500], borderRadius: 20, border: `2px solid ${indigo[500]}`}}
                         onClick={() => setFormToShow('register')}
                     >
                         Registrar
                     </Button>
-                    <ButtonLogin onClick={() => {
-                        doLogin(user, password, history, dispatch, setSnackBar)
-                    }}/>
+
                 </Box>
             </Paper>
         </Box>

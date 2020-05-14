@@ -159,7 +159,7 @@ class MainScreen extends Component {
         return (
             <div>
                 <Typography variant={"h4"}
-                            style={{fontFamily: 'nunito', color: '#5a5c69', margin: 30, marginBottom: 10}}>Dashboard</Typography>
+                            style={{fontFamily: 'nunito', color: '#5a5c69', marginLeft: '2%', marginRight: '2%', marginBottom: '0.67%'}}>Dashboard</Typography>
                 <OverViewOfSystemCards />
                 <Typography variant={"h4"} style={{
                     fontFamily: 'nunito',
@@ -170,7 +170,7 @@ class MainScreen extends Component {
                 }}>Lançamentos</Typography>
                 <EntryValueButtons onSuccess={this.handleSuccess}/>
                 <ThemeProvider theme={theme}>
-                    <EntriesTable maxHeight={585} columns={ColumnsEntries(this.state.selectDate, (selectDate) => {
+                    <EntriesTable maxHeight={/*TENTAR ACHAR UMA PROPORÇÃO PRA CÁ*/ 440  } columns={ColumnsEntries(this.state.selectDate, (selectDate) => {
                         this.setState({...this.state, selectDate})
                     })}>
                         {
@@ -187,7 +187,7 @@ class MainScreen extends Component {
                                         >{moment(value.date).format('DD/MM/YYYY')}
                                         </TableCell>
                                         <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>R$ {value.price}</TableCell>
-                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.selectedCustomer}</TableCell>
+                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.selectedCustomer === 'true' || value.selectedCustomer === 'carteira' ? null : value.selectedCustomer}</TableCell>
                                         <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>
                                             {
                                                 value.isService && value.isProduct ? `${value.selectedService} - ${value.selectedProduct}` :
@@ -195,7 +195,7 @@ class MainScreen extends Component {
                                                         value.isProduct ? `${value.selectedProduct}` : ''
                                             }
                                         </TableCell>
-                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.paymentMethod}</TableCell>
+                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.paymentMethod === 'vista' ? 'A vista' : value.paymentMethod}</TableCell>
                                         <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{getTextByStatus(value.status)}</TableCell>
                                         <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.ref}</TableCell>
                                         <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'} style={{width:175}}>

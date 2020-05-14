@@ -37,7 +37,7 @@ class AddCreditForm extends Component {
         id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insertCredit',
         date: this.props.data ? this.props.data.date : moment().valueOf(),
-        selectedCustomer: this.props.data ? this.props.data.selectedCustomer : true,
+        selectedCustomer: this.props.data ? this.props.data.selectedCustomer : null,
         selectedService: this.props.data ? this.props.data.selectedService : null,
         selectedProduct: this.props.data ? this.props.data.selectedProduct : null,
         paymentMethod: this.props.data ? this.props.data.paymentMethod : null,
@@ -62,6 +62,18 @@ class AddCreditForm extends Component {
 
     onSuccess = () => {
         const newCredit = this.state;
+        if (newCredit.price === true || newCredit.price === null
+        &&  newCredit.status === true || newCredit.status === null) {
+            this.setState({...this.state, price: null, status: null});
+            return;
+        } else if (newCredit.price === true || newCredit.price === null) {
+            this.setState({...this.state, price: null});
+            return;
+        } else if (newCredit.status === true || newCredit.status === null) {
+            this.setState({...this.state, status: null});
+            return;
+        }
+
         newCredit.price = parseFloat(newCredit.price);
         manageDataInDb('values', newCredit, this.props.token).then(res => {
             newCredit.id = res;
@@ -77,7 +89,8 @@ class AddCreditForm extends Component {
         })
         this.props.update();
 
-    };
+    }
+    ;
 
     render() {
         const {classes} = this.props
@@ -91,11 +104,12 @@ class AddCreditForm extends Component {
                     }
                 }}>
                     <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 10}}>
-                        <DateFieldComponent date={this.state.date} onChange={(value) => this.setState({date: value})}
+                        <DateFieldComponent date={this.state.date}
+                                            onChange={(value) => this.setState({date: value})}
                                             label={'Data do crédito'}/>
                         <div style={{marginBottom: 5}}>
                             <FormControl style={{marginTop: 10}}>
-                                <InputLabel required error={!this.state.selectedCustomer} id={'cliente'}>Cliente</InputLabel>
+                                <InputLabel id={'cliente'}>Cliente</InputLabel>
                                 <Select
                                     labelId={'cliente'}
                                     id={'clienteSelect'}
@@ -121,9 +135,10 @@ class AddCreditForm extends Component {
                             </FormControl>
                         </div>
                         <div>
-                            <FormControlLabel style={{marginTop: 12.5}}
-                                              control={<Checkbox checked={this.state.isService}/>}
-                                              onClick={() => this.checkServiceBox()} label={'Serviço'}/>
+                            <FormControlLabel
+                                style={{marginTop: 12.5}}
+                                control={<Checkbox checked={this.state.isService}/>}
+                                onClick={() => this.checkServiceBox()} label={'Serviço'}/>
                             <FormControl style={{float: 'right'}}>
                                 <InputLabel id={'serviceList'}>Lista de Serviços</InputLabel>
                                 <Select
@@ -149,10 +164,11 @@ class AddCreditForm extends Component {
                             </FormControl>
                         </div>
                         <div>
-                            <FormControlLabel style={{marginTop: 12.5}}
-                                              control={<Checkbox checked={this.state.isProduct}
-                                                                 onChange={() => this.checkProductBox()}/>}
-                                              label={'Mercadoria'}/>
+                            <FormControlLabel
+                                style={{marginTop: 12.5}}
+                                control={<Checkbox checked={this.state.isProduct}
+                                                   onChange={() => this.checkProductBox()}/>}
+                                label={'Mercadoria'}/>
                             <FormControl style={{float: 'right'}}>
                                 <InputLabel id={'productsList'}>Lista de Produtos</InputLabel>
                                 <Select
@@ -178,16 +194,23 @@ class AddCreditForm extends Component {
                                 </Select>
                             </FormControl>
                         </div>
-                        <MethodPayment paymentMethod={this.state.paymentMethod}
-                                       onChange={(methodPayment) => this.setState({
-                                           ...this.state,
-                                           paymentMethod: methodPayment
-                                       })}/>
-                        <CostOfService label={'Valorização'} required={true} value={this.state.price === true ? true : this.state.price} onChange={(value) => {
-                            this.setState({...this.state, price: formatCurrencie(value)});
-                        }}/>
+                        <MethodPayment
+                            paymentMethod={this.state.paymentMethod}
+                            onChange={(methodPayment) => this.setState({
+                                ...this.state,
+                                paymentMethod: methodPayment
+                            })}/>
+                        <CostOfService
+                            label={'Valorização'} required={true}
+                            value={this.state.price}
+                            onChange={(value) => {
+                                this.setState({...this.state, price: formatCurrencie(value)});
+                            }}/>
                         <FormControl>
-                            <InputLabel required error={!this.state.status} id={'statusPayment'}>Status do Pagamento</InputLabel>
+                            <InputLabel required error={!this.state.status} id={'statusPayment'}
+                                        children={<span>{!this.state.status ? 'Selecione o Status' : null}</span>}>Status
+                                do
+                                Pagamento</InputLabel>
                             <Select
                                 labelId={'statusPayment'}
                                 id={'statusPaymentSelect'}
@@ -214,28 +237,36 @@ class AddCreditForm extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        token: state.session.token,
-        listOfCustomers: state.listCustomers,
-        listOfProducts: state.listProducts,
-        listOfServices: state.listServices
-    }
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        insertData: (credit) => {
-            dispatch(addValue(credit));
-        },
-        saveFilteredData: (type, value) => {
-            dispatch(saveDataFromDb({type: type, payload: value}))
-        },
-        updateData: (credit) => {
-            dispatch(updateValue(credit))
+const
+    mapStateToProps = state => {
+        return {
+            token: state.session.token,
+            listOfCustomers: state.listCustomers,
+            listOfProducts: state.listProducts,
+            listOfServices: state.listServices
         }
-    }
-};
+    };
 
-const ECC = withStyles(style)(AddCreditForm);
-export default connect(mapStateToProps, mapDispatchToProps)(ECC);
+const
+    mapDispatchToProps = (dispatch) => {
+        return {
+            insertData: (credit) => {
+                dispatch(addValue(credit));
+            },
+            saveFilteredData: (type, value) => {
+                dispatch(saveDataFromDb({type: type, payload: value}))
+            },
+            updateData: (credit) => {
+                dispatch(updateValue(credit))
+            }
+        }
+    };
+
+const
+    ECC = withStyles(style)(AddCreditForm);
+export default connect(mapStateToProps, mapDispatchToProps)
+
+(
+    ECC
+)
+;
