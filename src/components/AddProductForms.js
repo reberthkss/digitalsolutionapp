@@ -19,8 +19,8 @@ class AddProductForms extends Component {
         name: this.props.data ? this.props.data.name : true,
         brand: this.props.data ? this.props.data.brand : true,
         amount: this.props.data ? this.props.data.amount : null,
-        priceCost: this.props.data ? this.props.data.priceCost : null,
-        priceSell: this.props.data ? this.props.data.priceSell : null,
+        priceCost: this.props.data ? this.props.data.priceCost : true,
+        priceSell: this.props.data ? this.props.data.priceSell : true,
     };
 
     onCancel = () => {
