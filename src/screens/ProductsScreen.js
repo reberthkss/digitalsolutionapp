@@ -68,47 +68,47 @@ class ProductsScreen extends Component {
     renderBody = () => {
         const {classes} = this.props
         return (
-            <div>
-                <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Produtos</Typography>
-                <Grid container>
-                    <Grid item xs={12}>
-                        <ThemeProvider theme={theme}>
-                            <EntriesTable maxHeight={565} columns={columnsProducts}>
-                                {this.props.listOfProducts ? this.props.listOfProducts.map(product => {
-                                    return (
-                                        <TableRow key={product.nome}>
-                                            <TableCell component={'th'} scope={'row'}>{product.name}</TableCell>
-                                            <TableCell component={'th'} scope={'row'}>{product.brand}</TableCell>
-                                            <TableCell component={'th'} scope={'row'} align={'center'}>{product.amount}</TableCell>
-                                            <TableCell component={'th'} scope={'row'}>R$ {product.priceCost}</TableCell>
-                                            <TableCell component={'th'} scope={'row'}>R$ {product.priceSell}</TableCell>
-                                            <TableCell component={'th'} scope={'row'} style={{width: 170}}>
-                                                <Box display={'flex'} justifyContent={'flex-start'}>
-                                                    <IconButton onClick={() => {
-                                                        product.type = 'update_product';
-                                                        this.setState({addProduct: true, data: product})
-                                                    }}>
-                                                        <EditIcon />
-                                                    </IconButton>
+            <Grid container style={{height: '93.5%'}} direction={'column'} alignItems={"flex-start"}>
+                <Grid item style={{height: '10%', width: '100%'}}>
+                    <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Produtos</Typography>
+                </Grid>
+                <Grid item style={{height: '90%', width: '100%'}}>
+                    <ThemeProvider theme={theme}>
+                        <EntriesTable maxHeight={'100%'} columns={columnsProducts}>
+                            {this.props.listOfProducts ? this.props.listOfProducts.map(product => {
+                                return (
+                                    <TableRow key={product.nome}>
+                                        <TableCell component={'th'} scope={'row'}>{product.name}</TableCell>
+                                        <TableCell component={'th'} scope={'row'}>{product.brand}</TableCell>
+                                        <TableCell component={'th'} scope={'row'} align={'center'}>{product.amount}</TableCell>
+                                        <TableCell component={'th'} scope={'row'}>R$ {product.priceCost}</TableCell>
+                                        <TableCell component={'th'} scope={'row'}>R$ {product.priceSell}</TableCell>
+                                        <TableCell component={'th'} scope={'row'} style={{width: 170}}>
+                                            <Box display={'flex'} justifyContent={'flex-start'}>
+                                                <IconButton onClick={() => {
+                                                    product.type = 'update_product';
+                                                    this.setState({addProduct: true, data: product})
+                                                }}>
+                                                    <EditIcon />
+                                                </IconButton>
 
-                                                    <IconButton onClick={() => {
-                                                        removeDataDb('product', 'remove_product', product.id, this.props.token);
-                                                        this.props.removeProduct(product.id);
-                                                        this.setState({...this.state,
-                                                            showSnackbar: true,
-                                                            message: 'Produto deletado com sucesso!',
-                                                            addProduct: false})
-                                                    }}>
-                                                        <CloseIcon />
-                                                    </IconButton>
-                                                </Box>
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                }) : null}
-                            </EntriesTable>
-                        </ThemeProvider>
-                    </Grid>
+                                                <IconButton onClick={() => {
+                                                    removeDataDb('product', 'remove_product', product.id, this.props.token);
+                                                    this.props.removeProduct(product.id);
+                                                    this.setState({...this.state,
+                                                        showSnackbar: true,
+                                                        message: 'Produto deletado com sucesso!',
+                                                        addProduct: false})
+                                                }}>
+                                                    <CloseIcon />
+                                                </IconButton>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            }) : null}
+                        </EntriesTable>
+                    </ThemeProvider>
                 </Grid>
 
                 <Fab className={classes.FloatEnterButton} onClick={()=>this.setState({addProduct: true})}>
@@ -128,7 +128,7 @@ class ProductsScreen extends Component {
                         update={() => this.setState({addProduct: false})}
                         onCancel={()=>this.setState({...this.state, addProduct: false})}/>
                 </ModalBody>
-            </div>
+            </Grid>
         )
     };
     render() {

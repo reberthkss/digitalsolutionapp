@@ -19,7 +19,7 @@ class AddDebitForm extends Component {
     state = {
         id: this.props.data ? this.props.data.id : null,
         type: this.props.data ? this.props.data.type : 'insertCredit',
-        date: this.props.data ? this.props.data.date : moment().valueOf() ,
+        date: this.props.data ? this.props.data.date : moment().valueOf(),
         selectedCustomer: this.props.data ? this.props.data.selectedCustomer : null,
         selectedService: this.props.data ? this.props.data.selectedService : null,
         selectedProduct: this.props.data ? this.props.data.selectedProduct : null,
@@ -51,7 +51,7 @@ class AddDebitForm extends Component {
                 this.props.onSuccess('Debito', 'adicionado');
             } else {
                 this.props.updateData(newDebit);
-                this.props.saveData({type:'updateFilteredValue', payload: newDebit});
+                this.props.saveData({type: 'updateFilteredValue', payload: newDebit});
                 this.props.onSuccess('Debito', 'atualizado');
             }
         })
@@ -63,22 +63,44 @@ class AddDebitForm extends Component {
 
     render() {
         return (
-            <ModalContainer  height={this.props.height ? this.props.height : '50vh'}>
-                <Box style={{height:'100%',width:'100%'}} flexDirection={'column'}>
-                    <Typography>Adicionar Saída</Typography>
+            <ModalContainer height={this.props.height ? this.props.height : null}>
+                <Box style={{height: '100%', width: '100%'}} flexDirection={'column'}>
+                    <Typography>Nova Saída</Typography>
                     <form onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             this.onSuccess()
                             e.preventDefault()
                         }
                     }}>
-                        <Box display={'flex'} style={{height: '100%'}} flexDirection='column' justifyContent={'center'}>
-                            <DateFieldComponent label={'Data do Débito'} date={this.state.date} onChange={(dateMoment)=> this.setState({...this.state, date: dateMoment})}/>
-                            <MethodPayment paymentMethod={this.state.paymentMethod} onChange={(methodPayment) => this.setState({...this.state, paymentMethod: methodPayment})}/>
-                            <TextField  required error={!this.state.ref} value={this.state.ref === true ? null : this.state.ref} label={'Referência'} onChange={event => this.setState({...this.state, ref: event.target.value})} />
-                            <CostOfService label={'Valorização'} value={this.state.price} onChange={(value) => this.setState({...this.state, price: formatCurrencie(value)})} />
+                        <Box display={'flex'} style={{height: '30vh'}} flexDirection='column'
+                             justifyContent={'center'}>
+                            <DateFieldComponent label={'Data do Débito'} date={this.state.date}
+                                                onChange={(dateMoment) => this.setState({
+                                                    ...this.state,
+                                                    date: dateMoment
+                                                })}/>
+                            <MethodPayment paymentMethod={this.state.paymentMethod}
+                                           onChange={(methodPayment) => this.setState({
+                                               ...this.state,
+                                               paymentMethod: methodPayment
+                                           })} style={{width: '100%'}}/>
+                            <TextField fullWidth required error={!this.state.ref}
+                                       value={this.state.ref === true ? null : this.state.ref} label={'Referência'}
+                                       onChange={event => this.setState({...this.state, ref: event.target.value})}/>
+                            <Box style={{marginTop: 20}}>
+                                <CostOfService label={'Valorização'} value={this.state.price}
+                                               onChange={(value) => this.setState({
+                                                   ...this.state,
+                                                   price: formatCurrencie(value)
+                                               })} style={{width: '100%'}}/>
+
+                            </Box>
                         </Box>
-                        <Box display='flex'  style={{paddingTop: 5, marginBottom: -20}} alignItems='flex-end'justifyContent={'flex-end'}>
+                        <Box display='flex'
+                             alignItems='flex-end'
+                             justifyContent={'flex-end'}
+                             style={{marginTop: 15}}
+                        >
                             <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
                         </Box>
                     </form>

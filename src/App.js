@@ -8,20 +8,14 @@ import Box from '@material-ui/core/Box'
 import MainScreen from "./screens/mainScreen";
 import {
     BrowserRouter as Router,
-    useHistory,
     Switch,
     Route,
 } from 'react-router-dom'
-import GetDataDbProvider from "./services/getDataDbProvider";
-import {saveDataFromDb} from "./redux/actions";
 import {connect} from "react-redux";
-import CircularProgress from '@material-ui/core/CircularProgress';
 import LoginScreen from "./screens/loginScreen";
 import CustomersScreen from "./screens/CustomersScreen";
 import ServicesScreen from "./screens/ServicesScreen";
 import ProductsScreen from "./screens/ProductsScreen";
-import {validationTokenProvider} from './services/validationTokenProvider'
-import moment from "moment";
 
 class App extends Component {
     state = {
@@ -45,7 +39,7 @@ class App extends Component {
                 <Box display={'flex'}>
                     {this.state.showDrawerMenu ?
                         <NavBarMobile height={this.state.height} setPage={this.setPage}/> : null}
-                    <div style={{width: '100%'}}>
+                    <div  style={{width: '100%', height: '100vh'}} >
                         <NavBar menuIconClick={this.showMenu} user={this.props.user}/>
                             <Route exact path={'/dashboard'} component={MainScreen}/>
                             <Route exact path={'/customers'} component={CustomersScreen}/>

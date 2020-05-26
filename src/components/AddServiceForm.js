@@ -44,7 +44,7 @@ class AddServiceForm extends Component {
 
     render() {
         return (
-            <ModalContainer height={'30vh'}>
+            <ModalContainer height={'20vh'}>
                 <Typography>
                     Novo serviço
                 </Typography>
@@ -55,19 +55,18 @@ class AddServiceForm extends Component {
                         e.preventDefault()
                     }
                 }}>
-                    <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 20, paddingRight: 20}}>
-                        <Box display={'flex'} flexDirection={'column'}>
-                            <TextField
-                                label={'Descrição'}
-                                error={!this.state.descricao}
-                                value={this.state.descricao === true ? null : this.state.descricao}
-                                onChange={event => this.setState({...this.state, descricao: event.target.value})}
-                                helperText={this.state.descricao ? null : 'Digite o nome do serviço'}
-                            />
-                            <CostOfService label={'Valorização'} value={this.state.valorizacao} onChange={value => this.setState({...this.state, valorizacao: formatCurrencie(value)})}/>
-                        </Box>
+                    <Box display={'flex'} flexDirection={'column'} style={{paddingBottom: 20}}>
+                        <TextField
+                            fullWidth
+                            label={'Descrição'}
+                            error={!this.state.descricao}
+                            value={this.state.descricao === true ? null : this.state.descricao}
+                            onChange={event => this.setState({...this.state, descricao: event.target.value})}
+                            helperText={this.state.descricao ? null : 'Digite o nome do serviço'}
+                        />
+                        <CostOfService label={'Valorização'} value={this.state.valorizacao} onChange={value => this.setState({...this.state, valorizacao: formatCurrencie(value)})} style={{width: '100%'}}/>
                     </Box>
-                    <Box display={'flex'} style={{height: '7vh'}} alignItems={'flex-end'} justifyContent={'flex-end'}>
+                    <Box display={'flex'} style={{height: '10%'}} alignItems={'flex-end'} justifyContent={'flex-end'}>
                         <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
                     </Box>
                 </form>

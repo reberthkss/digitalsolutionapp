@@ -20,8 +20,8 @@ export default class MethodPayment extends Component {
 
     render() {
         return (
-            <div>
-                <FormControl>
+            <div style={this.props.style}>
+                <FormControl style={{width: '100%'}}>
                     <InputLabel id={'methodPayment'}>Forma de Pagamento</InputLabel>
                     <Select
                         labelId={'methodPayment'}
@@ -33,7 +33,7 @@ export default class MethodPayment extends Component {
                             this.setState({payment: event.target.value});
                             this.props.onChange(event.target.value);
                         }}
-                        style={{width: 350}}
+                        style={{width: '100%'}}
                     >
                         <MenuItem value={null} style={{height: 20}}></MenuItem>
                         <MenuItem value={'boleto'}>Boleto</MenuItem>

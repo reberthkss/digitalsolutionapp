@@ -54,12 +54,12 @@ class AddCustomerForm extends Component {
     render() {
         const {classes} = this.props
         return (
-            <ModalContainer>
+            <ModalContainer height={'58vh'}>
                 <Typography>
                     Novo cliente
                 </Typography>
-                <form style={{height: '55vh'}}>
-                    <Box display={'flex'} style={{height: '55vh'}} justifyContent={'center'} flexDirection={'column'}>
+                <form style={{height: '45vh'}}>
+                    <Box display={'flex'} style={{height: '100%'}} justifyContent={'center'} flexDirection={'column'}>
                         <TextField
                             required
                             error={!this.state.name}
@@ -96,7 +96,7 @@ class AddCustomerForm extends Component {
                                 contactPerson: event.target.value
                             })}/>
                     </Box>
-                    <Box display={'flex'} alignItems={'flex-end'} style={{height: '3vh'}} justifyContent={'flex-end'}>
+                    <Box display={'flex'} alignItems={'flex-end'} style={{height: '10%', marginTop: 15}} justifyContent={'flex-end'}>
                         <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
                     </Box>
                 </form>

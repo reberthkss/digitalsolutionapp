@@ -66,16 +66,17 @@ class CustomersScreen extends Component {
     renderBody = () => {
         const {classes} = this.props;
         return (
-            <div>
-                <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Clientes</Typography>
-                <Grid container>
-                    <Grid item xs={12}>
+            <Grid container style={{height: '93.5%'}} direction={'column'} alignItems={"flex-start"}>
+                <Grid item style={{height: '10%', width: '100%'}}>
+                    <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Clientes</Typography>
+                </Grid>
+                <Grid item style={{height: '90%', width: '100%'}}>
                         <ThemeProvider theme={theme}>
-                            <EntriesTable maxHeight={565} columns={columnsTable}>
+                            <EntriesTable maxHeight={'100%'} columns={columnsTable}>
                                 {this.props.customers ? this.props.customers.map((customer) => (
                                         <TableRow key={customer.nome}>
                                             <TableCell component={'th'} scope={'row'}>{customer.name}</TableCell>
-                                            <TableCell component={'th'} scope={'row'}>{customer.cnpj}</TableCell>
+                                            <TableCell component={'th'} scope={'row'} style={{width: 200}}>{customer.cnpj}</TableCell>
                                             <TableCell component={'th'} scope={'row'}>{customer.formalName}</TableCell>
                                             <TableCell component={'th'} scope={'row'}>{customer.email}</TableCell>
                                             <TableCell component={'th'} scope={'row'} style={{width: 200}}>{customer.fone}</TableCell>
@@ -106,7 +107,6 @@ class CustomersScreen extends Component {
                                 }
                             </EntriesTable>
                         </ThemeProvider>
-                    </Grid>
                 </Grid>
                 <Fab className={classes.FloatEnterButton} onClick={()=>this.setState({addCustomer: true})}>
                     <AddBoxRoundedIcon />
@@ -123,7 +123,7 @@ class CustomersScreen extends Component {
                         data={this.state.data}
                         onCancel={()=>this.setState({...this.state, addCustomer: false})}/>
                 </ModalBody>
-            </div>
+            </Grid>
         )
     }
     render() {

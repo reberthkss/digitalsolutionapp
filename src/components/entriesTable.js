@@ -13,12 +13,11 @@ class EntriesTable extends Component {
 
     render() {
         return (
-            <TableContainer style={{maxHeight: this.props.maxHeight ? this.props.maxHeight : 250}} component={Paper}>
+            <TableContainer style={{maxHeight: this.props.maxHeight}} component={Paper}>
                 <Table stickyHeader aria-label={'sticky table'}>
                     <TableHead>
                         <TableRow>
                             {this.props.columns.map(column => {
-
                                 switch (column) {
                                     case 'Ações':
                                         return <TableCell align={'center'}>
@@ -31,7 +30,6 @@ class EntriesTable extends Component {
                                     default:
                                         return <TableCell>{column}</TableCell>
                                 }
-
                             })}
                         </TableRow>
                     </TableHead>
