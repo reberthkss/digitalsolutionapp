@@ -67,43 +67,44 @@ class ServicesScreen extends Component {
     renderBody = () => {
         const {classes} = this.props;
         return (
-            <div>
-                <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Serviços</Typography>
-                <Grid container>
-                    <Grid item xs={12}>
-                        <ThemeProvider theme={theme}>
-                            <EntriesTable maxHeight={565} columns={columnsService}>
-                                {
-                                    this.props.listServices ? this.props.listServices.map(service => {
-                                        return (
-                                            <TableRow key={service.descricao}>
-                                                <TableCell component={'th'} scope={'row'}>{service.descricao}</TableCell>
-                                                <TableCell component={'th'} scope={'row'}>R$ {service.valorizacao}</TableCell>
-                                                <TableCell style={{width: 170}}>
-                                                    <Box display={'flex'} justifyContent={'flex-start'}>
-                                                        <IconButton onClick={() => {
-                                                            service.type = 'update_service'
-                                                            this.setState({addService: true, data: service})
-                                                        }}>
-                                                            <EditIcon />
-                                                        </IconButton>
-                                                        <IconButton onClick={ () => {
-                                                            removeDataDb('services', 'remove_service', service.id, this.props.token)
-                                                            this.props.removeService(service.id);
-                                                            this.setState({...this.state, showSnackbar: true, message: 'Serviço removido com sucesso!'});
-                                                        }
-                                                        }>
-                                                            <CloseIcon/>
-                                                        </IconButton>
-                                                    </Box>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    }) : null
-                                }
-                            </EntriesTable>
-                        </ThemeProvider>
-                    </Grid>
+            <Grid container style={{height: '93.5%'}} direction={"column"} alignItems={"flex-start"}>
+                <Grid item style={{height: '10%', width: '100%'}}>
+                    <Typography variant={"h4"} style={{fontFamily:'nunito', color:'#5a5c69', margin: 30}}>Serviços</Typography>
+                </Grid>
+
+                <Grid item style={{height: '90%', width: '100%'}}>
+                    <ThemeProvider theme={theme}>
+                        <EntriesTable maxHeight={'100%'} columns={columnsService}>
+                            {
+                                this.props.listServices ? this.props.listServices.map(service => {
+                                    return (
+                                        <TableRow key={service.descricao}>
+                                            <TableCell component={'th'} scope={'row'}>{service.descricao}</TableCell>
+                                            <TableCell component={'th'} scope={'row'}>R$ {service.valorizacao}</TableCell>
+                                            <TableCell style={{width: 170}}>
+                                                <Box display={'flex'} justifyContent={'flex-start'}>
+                                                    <IconButton onClick={() => {
+                                                        service.type = 'update_service'
+                                                        this.setState({addService: true, data: service})
+                                                    }}>
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                    <IconButton onClick={ () => {
+                                                        removeDataDb('services', 'remove_service', service.id, this.props.token)
+                                                        this.props.removeService(service.id);
+                                                        this.setState({...this.state, showSnackbar: true, message: 'Serviço removido com sucesso!'});
+                                                    }
+                                                    }>
+                                                        <CloseIcon/>
+                                                    </IconButton>
+                                                </Box>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                }) : null
+                            }
+                        </EntriesTable>
+                    </ThemeProvider>
                 </Grid>
 
                 <Fab className={classes.FloatEnterButton} onClick={()=>this.setState({...this.state, addService: true})}>
@@ -123,7 +124,7 @@ class ServicesScreen extends Component {
                         update={() => this.setState({addService: false})}
                         onCancel={()=>this.setState({addService: false})}/>
                 </ModalBody>
-            </div>
+            </Grid>
         )
     }
     render() {

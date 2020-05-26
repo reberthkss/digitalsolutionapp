@@ -65,7 +65,7 @@ class AddDebitForm extends Component {
         return (
             <ModalContainer height={this.props.height ? this.props.height : null}>
                 <Box style={{height: '100%', width: '100%'}} flexDirection={'column'}>
-                    <Typography>Adicionar Saída</Typography>
+                    <Typography>Nova Saída</Typography>
                     <form onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             this.onSuccess()
@@ -96,8 +96,11 @@ class AddDebitForm extends Component {
 
                             </Box>
                         </Box>
-                        <Box display='flex' alignItems='flex-end'
-                             justifyContent={'flex-end'}>
+                        <Box display='flex'
+                             alignItems='flex-end'
+                             justifyContent={'flex-end'}
+                             style={{marginTop: 15}}
+                        >
                             <CancelAndSaveButtons success={this.onSuccess} cancel={this.onCancel}/>
                         </Box>
                     </form>

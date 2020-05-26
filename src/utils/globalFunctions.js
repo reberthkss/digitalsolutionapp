@@ -42,11 +42,11 @@ export const getColorByStatus = (status) => {
 export const getTextByStatus = (status) => {
     switch (status) {
         case 'payed':
-            return 'Pago';
+            return 'PAGO';
         case 'opened':
-            return 'Aberto';
+            return 'ABERTO';
         case 'unpayed':
-            return 'Inadimplente';
+            return 'INADIMPLENTE';
     }
 };
 

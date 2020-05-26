@@ -214,10 +214,12 @@ class MainScreen extends Component {
                                                                     value.isProduct ? `${value.selectedProduct}` : ''
                                                         }
                                                     </TableCell>
-                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.paymentMethod === 'vista' ? 'A vista' : value.paymentMethod}</TableCell>
+                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{
+                                                        value.paymentMethod === 'vista' ? 'À VISTA' :
+                                                            value.paymentMethod != null ? value.paymentMethod.toUpperCase() : ''}</TableCell>
                                                     <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{getTextByStatus(value.status)}</TableCell>
                                                     <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.ref}</TableCell>
-                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'} style={{width:175}}>
+                                                    <TableCell style={{height: 'auto !important', width:175}} component={'th'} scope={'row'} >
                                                         <Box display={'flex'} flexDirection={'row'}  justifyContent={'flex-start'}>
                                                             <IconButton onClick={() => this.showSelectedValue(value)}>
                                                                 <EditIcon/>
