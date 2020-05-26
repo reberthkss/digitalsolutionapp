@@ -56,7 +56,7 @@ const renderSnackBar = (open, message, severity, setSnackBar) => {
 const renderBody = (history, handleUser, handleEmail, handlePassword, handleSecret, user, email, password, secret, dispatch, setSnackBar, setFormToShow, formToShow) => {
     return (
         <Box display={'flex'} flexDirection={'row'}>
-            {renderImageCard()}
+            {/*{renderImageCard()}*/}
             {
                 formToShow === 'login' ?
                     renderLoginFormCard(history, handleUser, handlePassword, user, password, dispatch, setSnackBar, setFormToShow) :
@@ -128,11 +128,11 @@ const LoginScreen = () => {
                     message,
                     severity
                 }))}
-                <Desktop>
+                {/*<Desktop>
                     <Box style={{width: 800}}>
                         <span>{listImages[img].about()}</span>
                     </Box>
-                </Desktop>
+                </Desktop>*/}
             </Box>
         </div>
     )
