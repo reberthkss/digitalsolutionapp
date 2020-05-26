@@ -28,7 +28,7 @@ class OverViewOfSystemCards extends Component {
         const valueOpened = this.props.listFilteredValues.opened ? this.getValuePayed(this.props.listFilteredValues.opened) : 0;
 
         return (
-            <Grid container>
+            <Grid container item>
                 <Grid item xs={12}>
                     <Grid container justify={'space-around'} style={{padding:30, paddingBottom: 10}}>
                         <StatOfSystemCard title={'SALDO ATUAL'} textColor={green['A700']} minHeightCard={100} marginCard={5} borderLeft={`.30rem solid #00c853`} value={formatCurrencie(valueTotalPayed)} icon={<AttachMoneyRoundedIcon fontSize={'large'}/>}/>

@@ -31,11 +31,11 @@ class EntryValueButtons extends Component {
                     </Fab>
 
                 <ModalBody open={this.state.showNewCredit} onClose={this.handleCloseCredit}>
-                    <AddCreditForm onSuccess={(actionType, action) => this.props.onSuccess(actionType, action)} update={() => this.setState({...this.state, showNewCredit: false})} onCancel={()=>this.setState({...this.state, showNewCredit: false})}/>
+                    <AddCreditForm height={'50vh'} onSuccess={(actionType, action) => this.props.onSuccess(actionType, action)} update={() => this.setState({...this.state, showNewCredit: false})} onCancel={()=>this.setState({...this.state, showNewCredit: false})}/>
                 </ModalBody>
 
                 <ModalBody open={this.state.showNewDebit} onClose={this.handleCloseDebit}>
-                    <AddDebitForm height={'30vh'} onSuccess={(actionType, action) => this.props.onSuccess(actionType, action)} update={() => this.setState({...this.state, showNewDebit: false})} onCancel={()=>this.setState({...this.state, showNewDebit: false})}/>
+                    <AddDebitForm height={'35vh'} onSuccess={(actionType, action) => this.props.onSuccess(actionType, action)} update={() => this.setState({...this.state, showNewDebit: false})} onCancel={()=>this.setState({...this.state, showNewDebit: false})}/>
                 </ModalBody>
             </Box>
 

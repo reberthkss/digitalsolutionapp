@@ -7,6 +7,7 @@ export default class DateFieldComponent extends Component {
     render() {
         return (
             <TextField
+                fullWidth
                 name={'date'}
                 InputLabelProps={{shrink: true, required: true }}
                 label={this.props.label}

@@ -44,6 +44,8 @@ import {CheckBox} from "@material-ui/icons";
 import FormCheckInput from "react-bootstrap/FormCheckInput";
 import Checkbox from "@material-ui/core/Checkbox";
 import {validationTokenProvider} from "../services/validationTokenProvider";
+import Grid from "@material-ui/core/Grid";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 const MenuProps = {
     PaperProps: {
         style: {
@@ -156,80 +158,98 @@ class MainScreen extends Component {
     }
 
     renderBody = () => {
+        const isMediumDevice = window.innerWidth < 1356;
+        console.log(isMediumDevice)
         return (
-            <div>
-                <Typography variant={"h4"}
-                            style={{fontFamily: 'nunito', color: '#5a5c69', marginLeft: '2%', marginRight: '2%', marginBottom: '0.67%'}}>Dashboard</Typography>
-                <OverViewOfSystemCards />
-                <Typography variant={"h4"} style={{
-                    fontFamily: 'nunito',
-                    color: '#5a5c69',
-                    margin: 30,
-                    marginTop: 10,
-                    marginBottom: 10
-                }}>Lançamentos</Typography>
-                <EntryValueButtons onSuccess={this.handleSuccess}/>
-                <ThemeProvider theme={theme}>
-                    <EntriesTable maxHeight={/*TENTAR ACHAR UMA PROPORÇÃO PRA CÁ*/ 440  } columns={ColumnsEntries(this.state.selectDate, (selectDate) => {
-                        this.setState({...this.state, selectDate})
-                    })}>
-                        {
-                            this.props.listCreditsDebits ?
-                                this.props.listCreditsDebits
-                                    .filter(value => this.state.selectDate.indexOf(moment(value.date).format('MMMM')) > -1)
-                                    .map(value => {
-                                return (
-                                    <TableRow key={value.id} style={{borderLeft: `.30rem solid ${getColorByStatus(value.status)} !important`}}>
-                                        <TableCell
-                                            component={'th'}
-                                            scope={'row'}
-                                            style={{borderLeft: `.3rem solid ${getColorByStatus(value.status)}`}}
-                                        >{moment(value.date).format('DD/MM/YYYY')}
-                                        </TableCell>
-                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>R$ {value.price}</TableCell>
-                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.selectedCustomer === 'true' || value.selectedCustomer === 'carteira' ? null : value.selectedCustomer}</TableCell>
-                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>
-                                            {
-                                                value.isService && value.isProduct ? `${value.selectedService} - ${value.selectedProduct}` :
-                                                    value.isService ? `${value.selectedService}` :
-                                                        value.isProduct ? `${value.selectedProduct}` : ''
-                                            }
-                                        </TableCell>
-                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.paymentMethod === 'vista' ? 'A vista' : value.paymentMethod}</TableCell>
-                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{getTextByStatus(value.status)}</TableCell>
-                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.ref}</TableCell>
-                                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'} style={{width:175}}>
-                                            <Box display={'flex'} flexDirection={'row'}  justifyContent={'flex-start'}>
-                                                <IconButton onClick={() => this.showSelectedValue(value)}>
-                                                    <EditIcon/>
-                                                </IconButton>
-                                                <IconButton onClick={() => {
-                                                    removeDataDb('values', 'remove_value', value.id, this.props.token);
-                                                    this.props.removeFilteredValue(value.id, value.status);
-                                                    this.props.removeValue(value.id);
-                                                    this.setState({
-                                                        ...this.state,
-                                                        showSnack: true,
-                                                        message: `Valor deletado!`
-                                                    })
-                                                }}>
-                                                    <CloseIcon/>
-                                                </IconButton>
-                                            </Box>
-                                        </TableCell>
-                                    </TableRow>
-                                )
-                            }) : null
-                        }
-                        <TableRow key={'totalValue'} style={{height: 10}} >
-                            <TableCell/>
-                            <TableCell align={"left"} colspan={4} component={'th'} scope={'row'} style={{height: 'auto !important'}}>
-                                Total $ {formatCurrencie( this.props.listCreditsDebits.length ? this.props.listCreditsDebits.map((val) => val.price).reduce((a, b) => a+b) : 0)}
-                            </TableCell>
-                        </TableRow>
-                    </EntriesTable>
-                </ThemeProvider>
+            <Grid container style={{height: '93.5%'}} alignContent={"flex-start"}>
+                <Grid item style={{height: '10%', width: '100%'}}>
+                    <div>
+                        <Typography variant={"h4"}
+                                    style={{
+                                        fontFamily: 'nunito',
+                                        color: '#5a5c69',
+                                        margin: '15px 30px',
+                                    }}>
+                            Dashboard
+                        </Typography>
+                    </div> {/*dashboard*/}
 
+                </Grid>
+                <Grid item style={{height: isMediumDevice ? '35%' : '20%', width: '100%'}}>
+                    <OverViewOfSystemCards />
+                </Grid>
+                <Grid item style={{height: '10%', width: '100%'}}>
+                    <Typography variant={"h4"} style={{
+                        fontFamily: 'nunito',
+                        color: '#5a5c69',
+                        margin: '10px 30px',
+                    }}>Lançamentos</Typography>
+                </Grid>
+                <Grid item style={{height: isMediumDevice ? '45%' : '60%', width: '100%'}}>
+                    <ThemeProvider theme={theme}>
+                        <EntriesTable
+                            maxHeight={'100%'}
+                            columns={ColumnsEntries(this.state.selectDate, (selectDate) => {
+                                this.setState({...this.state, selectDate})
+                            })}>
+                            {
+                                this.props.listCreditsDebits ?
+                                    this.props.listCreditsDebits
+                                        .filter(value => this.state.selectDate.indexOf(moment(value.date).format('MMMM')) > -1)
+                                        .map(value => {
+                                            return (
+                                                <TableRow key={value.id} style={{borderLeft: `.30rem solid ${getColorByStatus(value.status)} !important`}}>
+                                                    <TableCell
+                                                        component={'th'}
+                                                        scope={'row'}
+                                                        style={{borderLeft: `.3rem solid ${getColorByStatus(value.status)}`}}
+                                                    >{moment(value.date).format('DD/MM/YYYY')}
+                                                    </TableCell>
+                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>R$ {value.price}</TableCell>
+                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.selectedCustomer === 'true' || value.selectedCustomer === 'carteira' ? null : value.selectedCustomer}</TableCell>
+                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>
+                                                        {
+                                                            value.isService && value.isProduct ? `${value.selectedService} - ${value.selectedProduct}` :
+                                                                value.isService ? `${value.selectedService}` :
+                                                                    value.isProduct ? `${value.selectedProduct}` : ''
+                                                        }
+                                                    </TableCell>
+                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.paymentMethod === 'vista' ? 'A vista' : value.paymentMethod}</TableCell>
+                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{getTextByStatus(value.status)}</TableCell>
+                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.ref}</TableCell>
+                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'} style={{width:175}}>
+                                                        <Box display={'flex'} flexDirection={'row'}  justifyContent={'flex-start'}>
+                                                            <IconButton onClick={() => this.showSelectedValue(value)}>
+                                                                <EditIcon/>
+                                                            </IconButton>
+                                                            <IconButton onClick={() => {
+                                                                removeDataDb('values', 'remove_value', value.id, this.props.token);
+                                                                this.props.removeFilteredValue(value.id, value.status);
+                                                                this.props.removeValue(value.id);
+                                                                this.setState({
+                                                                    ...this.state,
+                                                                    showSnack: true,
+                                                                    message: `Valor deletado!`
+                                                                })
+                                                            }}>
+                                                                <CloseIcon/>
+                                                            </IconButton>
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        }) : null
+                            }
+                            <TableRow key={'totalValue'} style={{height: 10}} >
+                                <TableCell/>
+                                <TableCell align={"left"} colspan={4} component={'th'} scope={'row'} style={{height: 'auto !important'}}>
+                                    Total $ {formatCurrencie( this.props.listCreditsDebits.length ? this.props.listCreditsDebits.map((val) => val.price).reduce((a, b) => a+b) : 0)}
+                                </TableCell>
+                            </TableRow>
+                        </EntriesTable>
+                    </ThemeProvider>
+                </Grid>
+                <EntryValueButtons onSuccess={this.handleSuccess}/>
                 <Snackbar open={this.state.showSnack} autoHideDuration={2000}
                           onClose={() => this.setState({...this.state, showSnack: false})}>
                     <MuiAlert severity={'success'} variant={'filled'} onClose={() => this.setState({
@@ -242,19 +262,20 @@ class MainScreen extends Component {
                     {
                         this.state.isCredit ?
                             <AddCreditForm
+                                height={'50vh'}
                                 data={this.state.data}
                                 update={() => this.setState({...this.state, show: false})}
                                 onSuccess={this.handleSuccess}
                                 onCancel={() => this.setState({...this.state, show: false})}/> :
                             <AddDebitForm
                                 data={this.state.data}
+                                height={'35vh'}
                                 onSuccess={this.handleSuccess}
                                 update={() => this.setState({...this.state, show: false})}
                                 onCancel={() => this.setState({...this.state, show: false})}/>
                     }
                 </ModalBody>
-
-            </div>
+            </Grid>
         )
     }
 
@@ -286,3 +307,67 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
+
+/*
+
+<ThemeProvider theme={theme}>
+    <EntriesTable
+columns={ColumnsEntries(this.state.selectDate, (selectDate) => {
+    this.setState({...this.state, selectDate})
+})}>
+{
+    this.props.listCreditsDebits ?
+        this.props.listCreditsDebits
+            .filter(value => this.state.selectDate.indexOf(moment(value.date).format('MMMM')) > -1)
+            .map(value => {
+                return (
+                    <TableRow key={value.id} style={{borderLeft: `.30rem solid ${getColorByStatus(value.status)} !important`}}>
+                        <TableCell
+                            component={'th'}
+                            scope={'row'}
+                            style={{borderLeft: `.3rem solid ${getColorByStatus(value.status)}`}}
+                        >{moment(value.date).format('DD/MM/YYYY')}
+                        </TableCell>
+                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>R$ {value.price}</TableCell>
+                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.selectedCustomer === 'true' || value.selectedCustomer === 'carteira' ? null : value.selectedCustomer}</TableCell>
+                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>
+                            {
+                                value.isService && value.isProduct ? `${value.selectedService} - ${value.selectedProduct}` :
+                                    value.isService ? `${value.selectedService}` :
+                                        value.isProduct ? `${value.selectedProduct}` : ''
+                            }
+                        </TableCell>
+                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.paymentMethod === 'vista' ? 'A vista' : value.paymentMethod}</TableCell>
+                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{getTextByStatus(value.status)}</TableCell>
+                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.ref}</TableCell>
+                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'} style={{width:175}}>
+                            <Box display={'flex'} flexDirection={'row'}  justifyContent={'flex-start'}>
+                                <IconButton onClick={() => this.showSelectedValue(value)}>
+                                    <EditIcon/>
+                                </IconButton>
+                                <IconButton onClick={() => {
+                                    removeDataDb('values', 'remove_value', value.id, this.props.token);
+                                    this.props.removeFilteredValue(value.id, value.status);
+                                    this.props.removeValue(value.id);
+                                    this.setState({
+                                        ...this.state,
+                                        showSnack: true,
+                                        message: `Valor deletado!`
+                                    })
+                                }}>
+                                    <CloseIcon/>
+                                </IconButton>
+                            </Box>
+                        </TableCell>
+                    </TableRow>
+                )
+            }) : null
+}
+<TableRow key={'totalValue'} style={{height: 10}} >
+    <TableCell/>
+    <TableCell align={"left"} colspan={4} component={'th'} scope={'row'} style={{height: 'auto !important'}}>
+        Total $ {formatCurrencie( this.props.listCreditsDebits.length ? this.props.listCreditsDebits.map((val) => val.price).reduce((a, b) => a+b) : 0)}
+    </TableCell>
+</TableRow>
+</EntriesTable>
+</ThemeProvider>*/

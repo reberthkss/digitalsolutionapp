@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import Box  from '@material-ui/core/Box'
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import Grid from "@material-ui/core/Grid";
 
 const style = {
     root: {

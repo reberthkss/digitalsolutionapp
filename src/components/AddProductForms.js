@@ -89,12 +89,16 @@ class AddProductForms extends Component {
                                            onChange={(value) => this.setState({
                                                ...this.state,
                                                priceCost: formatCurrencie(value)
-                                           })}/>
+                                           })}
+                                           style={{width: '100%'}}
+                            />
                             <CostOfService label={'Preço de venda'} value={this.state.priceSell}
                                            onChange={(value) => this.setState({
                                                ...this.state,
                                                priceSell: formatCurrencie(value)
-                                           })}/>
+                                           })}
+                                           style={{width: '100%'}}
+                            />
                         </Box>
                     </Box>
                     <Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} style={{marginTop: 5}}>

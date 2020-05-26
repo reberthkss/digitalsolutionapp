@@ -9,8 +9,9 @@ export default class CostOfService extends Component {
     }
     render() {
         return (
-            <div style={{marginTop: 20}}>
+            <div style={this.props.style}>
                 <TextField
+                    fullWidth
                     InputProps={{
                         startAdornment: <InputAdornment position="start">R$</InputAdornment>,
                     }}
@@ -25,7 +26,6 @@ export default class CostOfService extends Component {
                         this.props.onChange(event.target.value)
                     }}
                     type={'text'}
-                    style={{width: 350}}
                     value={this.state.price === true ? null : this.state.price}
                     helperText={!this.props.value ? 'Digite o Valor' : null}
                 />
