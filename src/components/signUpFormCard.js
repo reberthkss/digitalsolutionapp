@@ -63,7 +63,7 @@ const doRegister = async (user, email, password, secret, setSnackBar) => {
 export const renderSignUpForm = (handleUser, handleEmail, handlePassword, handleSecret, user, email, password, secret, setSnackBar, setFormToShow) => {
     return (
         <Box>
-            <Paper style={{height: 500, width: 400}}>
+            <Paper elevation={0} style={{height: 500, width: 400}}>
                 <Box display={'flex'} flexDirection={'column'} style={{height: '100%'}} justifyContent={'center'}>
                     <Typography variant={'h4'} align={'center'}
                                 style={{paddingBottom: 70, color: '#5a5c69', fontFamily: 'nunito'}}>

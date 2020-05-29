@@ -65,8 +65,8 @@ export const finishLoad = () => {
 export const loadingAllData = () => {
     return {type: 'loadingAllData'}
 }
-export const markAsAuthenticated = (user, token) => {
-    return {type: 'authenticated', payload: {user, token}}
+export const markAsAuthenticated = (user, token, rememberMe) => {
+    return {type: 'authenticated', payload: {user, token, rememberMe}}
 };
 
 export const doLogout = () => {

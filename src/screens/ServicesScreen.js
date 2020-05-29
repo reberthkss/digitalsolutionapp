@@ -42,6 +42,10 @@ class ServicesScreen extends Component {
     };
 
     componentDidMount(): void {
+        //TODO
+        // Insert conditional to handle when this.props.rememberMe is true
+        // e.g send this.props.user and this.props.rememberMe to API, then
+        // API genenrates the token;
         if (this.props.token) {
             validationTokenProvider(this.props.token).then((checkedToken) => {
                 if (!checkedToken.isValid) {
@@ -138,6 +142,7 @@ const mapStateToProps = state => {
         token: state.session.token,
         listServices: state.listServices,
         loading: state.loadAllData,
+        rememberMe: state.session.rememberMe,
     };
 };
 

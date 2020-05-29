@@ -16,11 +16,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {markAsAuthenticated} from "../redux/actions";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import {renderLoginFormCard} from "../components/loginFormCard";
+import {RenderLoginFormCard} from "../components/loginFormCard";
 import {renderSignUpForm} from "../components/signUpFormCard";
 import {validationTokenProvider} from "../services/validationTokenProvider";
 import {renderLoading} from "../utils/loading";
-
 const Desktop = ({children}) => {
     const isDesktop = useMediaQuery({
         minWidth: 769
@@ -53,13 +52,13 @@ const renderSnackBar = (open, message, severity, setSnackBar) => {
     )
 }
 
-const renderBody = (history, handleUser, handleEmail, handlePassword, handleSecret, user, email, password, secret, dispatch, setSnackBar, setFormToShow, formToShow) => {
+const renderBody = (history, handleUser, handleEmail, handlePassword, handleSecret, handleRememberMe, rememberMe, user, email, password, secret, dispatch, setSnackBar, setFormToShow, formToShow) => {
     return (
         <Box display={'flex'} flexDirection={'row'}>
             {/*{renderImageCard()}*/}
             {
                 formToShow === 'login' ?
-                    renderLoginFormCard(history, handleUser, handlePassword, user, password, dispatch, setSnackBar, setFormToShow) :
+                    RenderLoginFormCard(history, handleUser, handlePassword, handleRememberMe, rememberMe, user, password, dispatch, setSnackBar, setFormToShow) :
                     renderSignUpForm(handleUser, handleEmail, handlePassword, handleSecret, user, email, password, secret, setSnackBar, setFormToShow)
             }
         </Box>
@@ -74,6 +73,7 @@ const LoginScreen = () => {
         [password, setPassword] = useState(null),
         [secretPass, setSecret] = useState(null),
         [email, setEmail] = useState(null),
+        [rememberMe, setRememberMe] = useState(false),
         history = useHistory(),
         dispatch = useDispatch(),
         {token} = useSelector(state => state.session);
@@ -98,7 +98,7 @@ const LoginScreen = () => {
     }
 
     return (
-        <div style={{width: '100%', height: '100vh', background: indigo['A400']}}>
+        <div style={{width: '100%', height: '100vh', background: "white"/*indigo['A400']*/}}>
             <Box display={'flex'} flexDirection={'column'} style={{height: '100%', width: '100%'}}
                  justifyContent={'center'} alignItems={'center'}>
                 {renderBody(history,
@@ -114,6 +114,10 @@ const LoginScreen = () => {
                     (secret) => {
                         setSecret(secret)
                     },
+                    () => {
+                        setRememberMe(!rememberMe)
+                    },
+                    rememberMe,
                     user,
                     email,
                     password,

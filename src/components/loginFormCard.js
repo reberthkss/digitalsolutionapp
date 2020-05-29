@@ -11,42 +11,39 @@ import Button from "@material-ui/core/Button";
 import {indigo} from "@material-ui/core/colors";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import {loadData} from "../utils/globalFunctions";
+import DigitalSolutionLogo from '../assets/digital solution logo.jpg'
+import {useSelector} from "react-redux";
+
 
 const ButtonLogin = ({onClick}) => {
     const [isDisabled, setDisabled] = useState(false);
     return (
-        <Box display={'flex'}>
-            <Button variant={'contained'}
-                    style={{
-                        background: !isDisabled ? indigo[600] : 'grey',
-                        color: 'white',
-                        width: '100%',
-                        marginLeft: 20,
-                        marginRight: 20,
-                        borderRadius: 20
-                    }}
-                    startIcon={< ExitToAppIcon/>}
-                    onClick={() => {
-                        setDisabled(true);
-                        onClick();
-                        setTimeout(() => setDisabled(false), 3000);
-                    }}
-                    disabled={isDisabled}
-            >
-                Entrar
-            </Button>
-        </Box>
+        <Button variant={'contained'}
+                style={{
+                    background: !isDisabled ? indigo[600] : 'grey',
+                    color: 'white',
+                }}
+                startIcon={< ExitToAppIcon/>}
+                onClick={() => {
+                    setDisabled(true);
+                    onClick();
+                    setTimeout(() => setDisabled(false), 3000);
+                }}
+                disabled={isDisabled}
+        >
+            Entrar
+        </Button>
+
     )
 }
 
-const doLogin = async (user, password, history, dispatch, setSnackBar) => {
-
+const doLogin = async (user, password, rememberMe, history, dispatch, setSnackBar) => {
     doLoginProvider(user, password).then((res) => {
         if (!res.auth) {
             return setSnackBar(true, res.message, 'error');
         } else {
             setSnackBar(true, 'Autenticado com sucesso!', 'success')
-            dispatch(markAsAuthenticated(user, res.token));
+            dispatch(markAsAuthenticated(user, res.token, rememberMe));
             loadData((type, payload) => dispatch(saveDataFromDb({type, payload})), res.token).then((res) => {
                 if (res.loaded) {
                     dispatch(finishLoad());
@@ -56,24 +53,21 @@ const doLogin = async (user, password, history, dispatch, setSnackBar) => {
         }
 
     }).catch(e => {
-        console.error(e.message)
+        setSnackBar(false, e.message, 'error');
     })
 };
 
 
-export const renderLoginFormCard = (history, handleUser, handlePassword, user, password, dispatch, setSnackBar, setFormToShow) => {
+export const RenderLoginFormCard = (history, handleUser, handlePassword, handleRememberMe, rememberMe, user, password, dispatch, setSnackBar, setFormToShow) => {
     return (
         <Box>
-            <Paper style={{height: 500, width: window.innerWidth <= 400 ? 350 : 400}}>
+            <Paper elevation={0} style={{height: 500, width: window.innerWidth <= 400 ? 350 : 400}}>
                 <Box display={'flex'} flexDirection={'column'} style={{height: '100%'}} justifyContent={'center'}>
-                    <Typography variant={'h4'} align={'center'}
-                                style={{paddingBottom: 70, color: '#5a5c69', fontFamily: 'nunito'}}>
-                        Bem - Vindo
-                    </Typography>
+                    <img src={DigitalSolutionLogo} alt={'digital solution'} style={{maxWidth: '85%', margin: '0 auto', padding: 5}}/>
                     <form
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                doLogin(user, password, history, dispatch, setSnackBar);
+                                doLogin(user, password, rememberMe, history, dispatch, setSnackBar);
                                 e.preventDefault()
                             }
                         }}>
@@ -94,18 +88,21 @@ export const renderLoginFormCard = (history, handleUser, handlePassword, user, p
                         </Box>
                     </form>
                     < Box display={'flex'} style={{paddingLeft: 50, paddingRight: 50, paddingTop: 5, paddingBottom: 5}}>
-                        <FormControlLabel control={< Checkbox checked={"todo"} name={'remember-me?'}/>}
+                        <FormControlLabel control={<Checkbox checked={rememberMe} onChange={handleRememberMe} style={{color: 'black'}} name={'remember-me?'}/>}
                                           label={'Lembrar de mim?'}/>
                     </Box>
-                    <ButtonLogin onClick={() => {
-                        doLogin(user, password, history, dispatch, setSnackBar)
-                    }}/>
-                    <Button
-                        style={{margin: 20, color: indigo[500], borderRadius: 20, border: `2px solid ${indigo[500]}`}}
-                        onClick={() => setFormToShow('register')}
-                    >
-                        Registrar
-                    </Button>
+
+                    <Box display={'flex'} flexDirection={'column'} justifyContent={'flex-end'} style={{marginLeft:50, marginRight: 50}}>
+                        <ButtonLogin onClick={() => {
+                            doLogin(user, password, rememberMe, history, dispatch, setSnackBar)
+                        }}/>
+                        <Button
+                            style={{color: indigo[500], marginTop: 5, border: `2px solid ${indigo[500]}`}}
+                            onClick={() => setFormToShow('register')}
+                        >
+                            Registrar
+                        </Button>
+                    </Box>
 
                 </Box>
             </Paper>

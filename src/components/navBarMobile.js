@@ -24,7 +24,7 @@ class NavBarMobile extends Component {
     render() {
         return (
             <div style={{height: this.props.height, width: '6.5rem'}}>
-                <AppBar style={{height: this.props.height}} position={'static'}>
+                <AppBar style={{height: this.props.height, backgroundColor: '#004077'}} position={'static'}>
                     <Box style={{height: this.props.height}} display={'flex'} flexDirection={'column'} justifyContent={'center'}>
                         <Box display={'flex'} flexDirection={'column'} alignItems={'center'} style={{marginBottom:50}}>
                             <Link to={'/dashboard'} onClick={()=> this.props.setPage('mainScreen')}>

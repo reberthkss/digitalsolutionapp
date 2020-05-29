@@ -197,9 +197,9 @@ export const loadAllData = (state = true, action) => {
     return state
 };
 
-export const session = (state = {user: null, token: null}, action) => {
+export const session = (state = {user: null, token: null, rememberMe: false}, action) => {
     if (action.type === 'doLogout') {
-        return {user: null, token: null}
+        return {user: null, token: null, rememberMe: false}
     }
 
     if (action.type === 'authenticated'){

@@ -136,6 +136,10 @@ class MainScreen extends Component {
 
     componentDidMount(): void {
         moment.locale('pt-br');
+        //TODO
+        // Insert conditional to handle when this.props.rememberMe is true
+        // e.g send this.props.user and this.props.rememberMe to API, then
+        // API genenrates the token;
         if (this.props.token) {
             validationTokenProvider(this.props.token).then((checkedToken) => {
                 console.log(checkedToken)
@@ -291,6 +295,7 @@ const mapStateToProps = state => {
     return {
         token: state.session.token,
         listCreditsDebits: state.listDebitsCredits,
+        rememberMe: state.session.rememberMe,
     }
 };
 
@@ -309,67 +314,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
-
-/*
-
-<ThemeProvider theme={theme}>
-    <EntriesTable
-columns={ColumnsEntries(this.state.selectDate, (selectDate) => {
-    this.setState({...this.state, selectDate})
-})}>
-{
-    this.props.listCreditsDebits ?
-        this.props.listCreditsDebits
-            .filter(value => this.state.selectDate.indexOf(moment(value.date).format('MMMM')) > -1)
-            .map(value => {
-                return (
-                    <TableRow key={value.id} style={{borderLeft: `.30rem solid ${getColorByStatus(value.status)} !important`}}>
-                        <TableCell
-                            component={'th'}
-                            scope={'row'}
-                            style={{borderLeft: `.3rem solid ${getColorByStatus(value.status)}`}}
-                        >{moment(value.date).format('DD/MM/YYYY')}
-                        </TableCell>
-                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>R$ {value.price}</TableCell>
-                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.selectedCustomer === 'true' || value.selectedCustomer === 'carteira' ? null : value.selectedCustomer}</TableCell>
-                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>
-                            {
-                                value.isService && value.isProduct ? `${value.selectedService} - ${value.selectedProduct}` :
-                                    value.isService ? `${value.selectedService}` :
-                                        value.isProduct ? `${value.selectedProduct}` : ''
-                            }
-                        </TableCell>
-                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.paymentMethod === 'vista' ? 'A vista' : value.paymentMethod}</TableCell>
-                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{getTextByStatus(value.status)}</TableCell>
-                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.ref}</TableCell>
-                        <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'} style={{width:175}}>
-                            <Box display={'flex'} flexDirection={'row'}  justifyContent={'flex-start'}>
-                                <IconButton onClick={() => this.showSelectedValue(value)}>
-                                    <EditIcon/>
-                                </IconButton>
-                                <IconButton onClick={() => {
-                                    removeDataDb('values', 'remove_value', value.id, this.props.token);
-                                    this.props.removeFilteredValue(value.id, value.status);
-                                    this.props.removeValue(value.id);
-                                    this.setState({
-                                        ...this.state,
-                                        showSnack: true,
-                                        message: `Valor deletado!`
-                                    })
-                                }}>
-                                    <CloseIcon/>
-                                </IconButton>
-                            </Box>
-                        </TableCell>
-                    </TableRow>
-                )
-            }) : null
-}
-<TableRow key={'totalValue'} style={{height: 10}} >
-    <TableCell/>
-    <TableCell align={"left"} colspan={4} component={'th'} scope={'row'} style={{height: 'auto !important'}}>
-        Total $ {formatCurrencie( this.props.listCreditsDebits.length ? this.props.listCreditsDebits.map((val) => val.price).reduce((a, b) => a+b) : 0)}
-    </TableCell>
-</TableRow>
-</EntriesTable>
-</ThemeProvider>*/

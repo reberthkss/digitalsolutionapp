@@ -65,7 +65,6 @@ class App extends Component {
             showDrawerMenu: true,
             height: '100vh'
         }) : this.setState({scrollToTop: this.state.scrollToTop, showDrawerMenu: false, height: 1000})
-
         return (
             <Router>
                 {
@@ -78,7 +77,7 @@ class App extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-        user: state.session.user
+        user: state.session.user,
     }
 }
 
