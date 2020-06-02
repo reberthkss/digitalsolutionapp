@@ -40,7 +40,7 @@ export default class MethodPayment extends Component {
                         <MenuItem value={'c-credito'}>C. Crédito</MenuItem>
                         <MenuItem value={'c-debito'}>C. Débito</MenuItem>
                         <MenuItem value={'Cheque'}>Cheque</MenuItem>
-                        <MenuItem value={'Cheque'}>Transferência</MenuItem>
+                        <MenuItem value={'transferencia'}>Transferência</MenuItem>
                         <MenuItem value={'vista'}>Dinheiro</MenuItem>
                     </Select>
                 </FormControl>

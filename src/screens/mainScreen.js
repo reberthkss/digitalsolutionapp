@@ -209,7 +209,7 @@ class MainScreen extends Component {
                                                         style={{borderLeft: `.3rem solid ${getColorByStatus(value.status)}`}}
                                                     >{moment(value.date).format('DD/MM/YYYY')}
                                                     </TableCell>
-                                                    <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>R$ {value.price}</TableCell>
+                                                    <TableCell style={{height: 'auto !important', width: 100}} component={'th'} scope={'row'}>R$ {value.price}</TableCell>
                                                     <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>{value.selectedCustomer === 'true' || value.selectedCustomer === 'carteira' ? null : value.selectedCustomer}</TableCell>
                                                     <TableCell style={{height: 'auto !important'}} component={'th'} scope={'row'}>
                                                         {
